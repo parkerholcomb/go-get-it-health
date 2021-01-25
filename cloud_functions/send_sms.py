@@ -11,7 +11,7 @@ secret = json.loads(get_secret_value_response['SecretString'])
 client = Client(secret['TWILIO_SID'], secret['TWILIO_SECRET'])
     
 def _find_nearby_supply(zip_code, last_n_days=2):
-    df = pd.read_csv("s3://vaccinate-texas/2021-01-25/17:00/vaccine-supply.csv", delimiter='\t')
+    df = pd.read_csv("s3://vaccinate-texas/latest/vaccine-supply.csv", delimiter='\t')
     print(df)
     df['zip'] = df['zip'].astype(str)
     df = df[df['zip'].apply(lambda x: x.startswith(zip_code[0:3]))] # this could get updated to geodesic distance

@@ -51,6 +51,7 @@ def main(event, context):
     today = datetime.now().strftime('%Y-%m-%d')
     hr_min = datetime.now().strftime('%H:%M')
     df.to_csv(f's3://vaccinate-texas/{today}/{hr_min}/vaccine-supply.csv', index=False, sep ='\t')
+    df.to_csv(f's3://vaccinate-texas/latest/vaccine-supply.csv', index=False, sep ='\t')
     msg = f"{len(df)} records moved to S3 at {today} {hr_min}"
     print(msg)
     response = {
