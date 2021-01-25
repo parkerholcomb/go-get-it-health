@@ -1,12 +1,17 @@
-from helpers import get_secret
+# from helpers import get_secret
 from twilio.rest import Client
 import pandas as pd
 from datetime import datetime, timedelta
+import json
+import boto3
 
-client = Client(get_secret()['TWILIO_SID'], get_secret()['TWILIO_SECRET'])
+secrets_client = boto3.session.Session().client(service_name='secretsmanager', region_name="us-east-1")
+get_secret_value_response = secrets_client.get_secret_value(SecretId='vaccinate-texas')
+secret = json.loads(get_secret_value_response['SecretString'])
+client = Client(secret['TWILIO_SID'], secret['TWILIO_SECRET'])
     
 def _find_nearby_supply(zip_code, last_n_days=2):
-    df = pd.read_csv("s3://vax-tx/tx-vaccine-supply.csv", delimiter='\t')
+    df = pd.read_csv("s3://vaccinate-texas/2021-01-25/17:00/vaccine-supply.csv", delimiter='\t')
     print(df)
     df['zip'] = df['zip'].astype(str)
     df = df[df['zip'].apply(lambda x: x.startswith(zip_code[0:3]))] # this could get updated to geodesic distance
@@ -14,11 +19,7 @@ def _find_nearby_supply(zip_code, last_n_days=2):
     df = df[df['last_update'] > (datetime.now() - timedelta(days=last_n_days)).strftime('%Y-%m-%d')]
     df = df.sort_values(by='last_update_vac', ascending=False) #tbd on this being the best format
     df = df[['name','type','address','city','zip','total_available','total_shipped','publicphone','last_update']]
-    # df.to_html(f"s3://www.vaccinatetexas.org/availability/{zip_code}.html", index=False) #maybe partion by date?
-    df.to_html(f"/Users/parker/Development/vax-tx/web/availability/{zip_code}.html", index=False)
     return df
-
-# def _format_location_record(record):
 
 def _top_n(df, n=5):
     df = df.sort_values(by='total_available', ascending=False)[['name','total_available']].head(n).reset_index()
@@ -32,8 +33,8 @@ def _generate_body(zip_code):
     url = f"http://www.vaccinatetexas.org.s3-website-us-east-1.amazonaws.com/availability/{zip_code}.html"
     body = '\n'.join(
         [
-            f"Dear {zip_code} resident - in the last two days, {df.total_available.sum()} COVID vaccine were "
-            f"reported available across {len(df)} locations in your area.",
+            f"COVID Vaccine updates for {zip_code} residents. In the last two days, {df.total_available.sum()} COVID vaccine became "
+            f"available across {len(df)} locations in your area.",
             "\nTop Locations include:",
             _top_n(df),
             f"\nGet information for all {len(df)} locations here: {url}",
@@ -43,10 +44,20 @@ def _generate_body(zip_code):
     print(body)
     return body
 
-def __main__(zip_code, to_="+1 713 824 8581"):
-    body = _generate_body(zip_code)
+def main(event, context):
+    data = json.loads(event['body'])
     from_ = "+1 512 488 6383"
-    msg = client.messages.create(body=body,from_=from_,to=to_)
+    msg = client.messages.create(body=_generate_body(data['zip_']),from_=from_,to=data['to_'])
     print(msg.sid)
+    response = {
+        "statusCode": 200,
+        "body": msg.sid
+    }
+    return response
 
-__main__('78741', '+15079510281')
+# event = {
+#     "zip_": "78741",
+#     "to_": "+1 713 824 8581"
+# }
+
+# __main__(event, "")
