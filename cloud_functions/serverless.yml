@@ -19,6 +19,10 @@ provider:
       Action:
         - s3:*
       Resource: '*'
+    - Effect: "Allow"
+      Action:
+        - secretsmanager:*
+      Resource: '*'
 
 package:
   exclude:
@@ -35,6 +39,12 @@ custom:
       - botocore
     
 functions:
+  send_sms:
+    handler: send_sms.main
+    events:
+      - http:
+          path: send-sms
+          method: post
   fetch_supply: 
     handler: fetch_supply.main
     events: 
