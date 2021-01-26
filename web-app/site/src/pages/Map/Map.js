@@ -40,9 +40,14 @@ class Map extends Component {
             className={`${styles.iframeContent}`} 
             src="https://tdem.maps.arcgis.com/apps/webappviewer/index.html?id=3700a84845c5470cb0dc3ddace5c376b"
           />
+          
+          <a
+            href="https://genesis.soc.texas.gov/files/accessibility/vaccineprovideraccessibilitydata.csv" 
+            style={{marginTop:'10px'}}
+          >
+            Download Raw Data
+          </a>
 
-          
-          
         </div>
       </div>
     )
