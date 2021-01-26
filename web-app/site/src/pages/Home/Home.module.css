@@ -57,6 +57,16 @@
   user-select: none;
 }
 
+@media only screen and (max-width: 768px) {
+  .heroTitle img {
+    margin-top: 20px;
+    max-width: 70%;
+  }
+
+}
+
+
+
 .heroDescription {
   display: flex;
   text-align: center;
