@@ -129,15 +129,19 @@ class Auth extends Component {
       <div className={`${styles.container} animateFadeIn`}>
         <div className={styles.containerInner}>
 
-          { /* Logo */}
-
-          <Link to='/' className={`${styles.logo}`}>
+          <div className='menuLogoContainer'>
             <img
-              draggable='false'
-              src={'./fullstack-app-title.png'}
-              alt='serverless-fullstack-application'
+              className='menuLogo'
+              src={'./vaccinate_texas.svg'}
+              alt='vaccinate-texas-logo'
             />
-          </Link>
+          </div>
+          <div className='menuContainer'>
+            <Link to='/' className='menuLink'>Home</Link>
+            <Link to='/register' className='menuLink menuLinkActive'>Register</Link>
+            <Link to='/map' className='menuLink'>Map</Link>
+            <Link to='/volunteer' className='menuLink'>Volunteer</Link>
+          </div>
 
           { /* Loading */}
 

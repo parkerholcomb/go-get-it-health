@@ -22,8 +22,8 @@ class Home extends Component {
           { /* Main Navigation */}
 
           <div className='menuContainer'>
-            <Link to='/login' className='menuLink'>Register</Link>
-            <Link to='/login' className='menuLink'>Map View</Link>
+            <Link to='/register' className='menuLink'>Register</Link>
+            <Link to='/map' className='menuLink'>Map</Link>
             <Link to='/login' className='menuLink'>Volunteer</Link>
           </div>
           
@@ -43,10 +43,6 @@ class Home extends Component {
             Getting Texans the data they need. Register to get SMS notifications when COVID vaccines are available in your area. 
           </div>
 
-          <div className={`${styles.heroDescription}`}>
-            Want to help? volunteer@vaccinatetexas.org
-          </div>
-
           { /* Call To Action */}
 
           <div className={`${styles.containerCta}`}>
@@ -57,7 +53,7 @@ class Home extends Component {
               </button>
             </Link>
 
-            <Link to='/login' className={`${styles.linkSignIn}`}>sign-in</Link>
+            {/* <Link to='/login' className={`${styles.linkSignIn}`}>sign-in</Link> */}
           </div>
         </div>
       </div>

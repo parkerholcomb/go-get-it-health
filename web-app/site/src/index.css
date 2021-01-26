@@ -36,6 +36,23 @@ div, h1, h2, h3, h4, h5, h6, p, span, input, button, li {
   margin: 10px 20px;
 }
 
+.menuLogoContainer {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.menuLogo {
+  height: 80px;
+  margin-bottom: 10px;
+  margin-right: 20px;
+}
+
+.menuLinkActive {
+  color: white;
+  font-weight: 600;
+}
+
 /**
  * Links
  */
