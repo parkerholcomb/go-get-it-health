@@ -130,21 +130,30 @@ class Register extends Component {
         <div className={styles.containerInner}>
 
           <div className='menuLogoContainer'>
-            <img
-              className='menuLogo'
-              src={'./vaccinate_texas.svg'}
-              alt='vaccinate-texas-logo'
-            />
+            <a href='/'>
+              <img
+                className='menuLogo'
+                src={'./vaccinate_texas.svg'}
+                alt='vaccinate-texas-logo'
+              />
+            </a>
+
           </div>
           <div className='menuContainer'>
-            <Link to='/' className='menuLink'>Home</Link>
             <Link to='/register' className='menuLink menuLinkActive'>Register</Link>
             <Link to='/map' className='menuLink'>Map</Link>
             <Link to='/volunteer' className='menuLink'>Volunteer</Link>
+            <Link to='/about' className='menuLink'>About</Link>
+            <a href='https://twitter.com/vaccinatetexas' target='_blank'>
+              <img src={'./twitter-icon.svg'} className='menuIcon' />
+            </a>
+            <a href='https://github.com/parquar/vaccinate-texas-org' target='_blank'>
+              <img src={'./github-icon.svg'} className='menuIcon' />
+            </a>
           </div>
 
           { /* Description Here */}
-          
+
           <div className={`${styles.heroDescription}`}>
             Get daily SMS notifications with local COVID inventory.
           </div>

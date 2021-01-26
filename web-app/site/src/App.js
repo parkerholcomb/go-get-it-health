@@ -6,11 +6,11 @@ import {
 } from 'react-router-dom'
 import Map from './pages/Map/Map'
 import Home from './pages/Home/Home'
-import Auth from './pages/Auth/Auth'
 import Dashboard from './pages/Dashboard/Dashboard'
 import { getSession } from './utils'
 import Volunteer from './pages/Volunteer/Volunteer'
 import Register from './pages/Register/Register'
+import About from './pages/About/About'
 
 export default class App extends Component {
 
@@ -42,6 +42,10 @@ export default class App extends Component {
 
           <Route path='/volunteer'>
             <Volunteer />
+          </Route>
+
+          <Route path='/about'>
+            <About />
           </Route>
 
           <PrivateRoute

@@ -24,7 +24,14 @@ class Home extends Component {
           <div className='menuContainer'>
             <Link to='/register' className='menuLink'>Register</Link>
             <Link to='/map' className='menuLink'>Map</Link>
-            <Link to='/login' className='menuLink'>Volunteer</Link>
+            <Link to='/volunteer' className='menuLink'>Volunteer</Link>
+            <Link to='/about' className='menuLink'>About</Link>
+            <a href='https://twitter.com/vaccinatetexas' target='_blank'>
+              <img src={'./twitter-icon.svg'} className='menuIcon' />
+            </a>
+            <a href='https://github.com/parquar/vaccinate-texas-org' target='_blank'>
+              <img src={'./github-icon.svg'} className='menuIcon' />
+            </a>
           </div>
           
           { /* Hero Artwork */}

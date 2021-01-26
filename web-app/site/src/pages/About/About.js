@@ -3,9 +3,9 @@ import {
   Link,
   withRouter
 } from 'react-router-dom'
-import styles from './Volunteer.module.css'
+import styles from './About.module.css'
 
-class Volunteer extends Component {
+class About extends Component {
 
   constructor(props) {
     super(props)
@@ -33,8 +33,8 @@ class Volunteer extends Component {
           <div className='menuContainer'>
             <Link to='/register' className='menuLink'>Register</Link>
             <Link to='/map' className='menuLink'>Map</Link>
-            <Link to='/volunteer' className='menuLink menuLinkActive'>Volunteer</Link>
-            <Link to='/about' className='menuLink'>About</Link>
+            <Link to='/volunteer' className='menuLink'>Volunteer</Link>
+            <Link to='/about' className='menuLink menuLinkActive'>About</Link>
             <a href='https://twitter.com/vaccinatetexas' target='_blank'>
               <img src={'./twitter-icon.svg'} className='menuIcon' />
             </a>
@@ -43,16 +43,28 @@ class Volunteer extends Component {
             </a>
           </div>
 
+          { /* About */}
+          <div className={`${styles.heroArtwork}`}>
+            <img
+              draggable='false'
+              src={'./go_and_get_it.svg'}
+              alt='go-and-get-it'
+            />
+          </div>
 
-          { /* Put the volunteer form here */}
-          <iframe className={`${styles.iframeContent}`} src="https://airtable.com/embed/shrXQTHXF90RYhiLG?backgroundColor=blue"></iframe>
+          { /* Hero Description */}
 
-          
-          
+          <div className={`${styles.heroDescription}`}>
+            Just trying to find my Dad a vaccine.
+            
+          </div>
+
+
+
         </div>
       </div>
     )
   }
 }
 
-export default withRouter(Volunteer)
+export default withRouter(About)

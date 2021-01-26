@@ -18,21 +18,33 @@ class Map extends Component {
 
     return (
       <div className={`${styles.container} animateFadeIn`}>
+        
         <div className={styles.containerInner}>
           { /* Main Navigation */}
-          <div className='menuLogoContainer'>
-            <img
-              className='menuLogo'
-              src={'./vaccinate_texas.svg'}
-              alt='vaccinate-texas-logo'
-            />
+          <div className={`${styles.mapMenuContainer}`}>
+            <div className='menuLogoContainer'>
+              <a href='/'>
+                <img
+                  className='menuLogo'
+                  src={'./vaccinate_texas.svg'}
+                  alt='vaccinate-texas-logo'
+                />
+              </a>
+            </div>
+            <div className='menuContainer'>
+              <Link to='/register' className='menuLink'>Register</Link>
+              <Link to='/map' className='menuLink menuLinkActive'>Map</Link>
+              <Link to='/volunteer' className='menuLink'>Volunteer</Link>
+              <Link to='/about' className='menuLink'>About</Link>
+              <a href='https://twitter.com/vaccinatetexas' target='_blank'>
+              <img src={'./twitter-icon.svg'} className='menuIcon' />
+            </a>
+            <a href='https://github.com/parquar/vaccinate-texas-org' target='_blank'>
+              <img src={'./github-icon.svg'} className='menuIcon' />
+            </a>
+            </div>
           </div>
-          <div className='menuContainer'>
-            <Link to='/' className='menuLink'>Home</Link>
-            <Link to='/register' className='menuLink'>Register</Link>
-            <Link to='/map' className='menuLink menuLinkActive'>Map</Link>
-            <Link to='/volunteer' className='menuLink'>Volunteer</Link>
-          </div>
+          
 
 
           { /* Put the map here */}
