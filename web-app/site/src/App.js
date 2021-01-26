@@ -10,6 +10,7 @@ import Auth from './pages/Auth/Auth'
 import Dashboard from './pages/Dashboard/Dashboard'
 import { getSession } from './utils'
 import Volunteer from './pages/Volunteer/Volunteer'
+import Register from './pages/Register/Register'
 
 export default class App extends Component {
 
@@ -28,11 +29,11 @@ export default class App extends Component {
         <Switch>
 
           <Route path='/register'>
-            <Auth />
+            <Register />
           </Route>
 
-          <Route path='/login'>
-            <Auth />
+          <Route path='/unsubscribe'>
+            <Register />
           </Route>
 
           <Route path='/map'>
