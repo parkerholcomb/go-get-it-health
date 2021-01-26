@@ -56,10 +56,18 @@ div, h1, h2, h3, h4, h5, h6, p, span, input, button, li {
 
 .menuIcon {
   width: 18px;
-  /* margin: 10px 5px; */
-  /* display: flex; */
-  /* align-items: center; */
-  /* justify-content: center; */
+}
+
+@media only screen and (max-width: 768px) {
+  .menuLink {
+    margin: 10px 20px;
+    font-size: 18px;
+  }
+
+  .menuIcon {
+    width: 14px;
+    margin: 0 10px;
+  }
 }
 
 /**

@@ -47,7 +47,7 @@ class Home extends Component {
           { /* Hero Description */}
 
           <div className={`${styles.heroDescription}`}>
-            Getting Texans the data they need. Register to get SMS notifications when COVID vaccines are available in your area. 
+            Register to get SMS notifications when COVID vaccines are available in your area. 
           </div>
 
           { /* Call To Action */}
