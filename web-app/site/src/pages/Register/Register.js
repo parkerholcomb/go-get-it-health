@@ -23,8 +23,8 @@ class Register extends Component {
     this.state.state = pathName
     this.state.loading = true
     this.state.error = null
-    this.state.formEmail = ''
-    this.state.formPassword = ''
+    this.state.formPhone = ''
+    this.state.formZip = ''
 
     // Bindings
     this.handleFormInput = this.handleFormInput.bind(this)
@@ -77,7 +77,7 @@ class Register extends Component {
     this.setState({ loading: true })
 
     // Validate email
-    if (!this.state.formEmail) {
+    if (!this.state.formPhone) {
       return this.setState({
         loading: false,
         formError: 'email is required'
@@ -85,7 +85,7 @@ class Register extends Component {
     }
 
     // Validate password
-    if (!this.state.formPassword) {
+    if (!this.state.formZip) {
       return this.setState({
         loading: false,
         formError: 'password is required'
@@ -95,9 +95,9 @@ class Register extends Component {
     let token
     try {
       if (this.state.state === 'register') {
-        token = await userRegister(this.state.formEmail, this.state.formPassword)
+        token = await userRegister(this.state.formPhone, this.state.formZip)
       } else {
-        token = await userLogin(this.state.formEmail, this.state.formPassword)
+        token = await userLogin(this.state.formPhone, this.state.formZip)
       }
     } catch (error) {
       console.log(error)
@@ -155,37 +155,12 @@ class Register extends Component {
           { /* Description Here */}
 
           <div className={`${styles.heroDescription}`}>
-            Get daily SMS notifications with local COVID inventory.
+            Get daily SMS notifications with local COVID inventory. 
+            Please remember that
+            <a href='https://www.dshs.state.tx.us/coronavirus/immunize/vaccine.aspx' target="_blank"> eligibility restritions apply.</a>
           </div>
-
-          { /* Loading */}
-
-          {this.state.loading && (
-            <div>
-              {< Loading className={styles.containerLoading} />}
-            </div>
-          )}
-
-          { /* Registration Form */}
-
-          {!this.state.loading && (
-            <div className={styles.formType}>
-              <div
-                className={
-                  `${styles.formTypeRegister} 
-                ${this.state.state === 'register' ? styles.formTypeActive : ''}`}
-                onClick={(e) => { this.handleFormTypeChange('register') }}>
-                Register
-              </div>
-              <div
-                className={
-                  `${styles.formTypeSignIn} 
-                ${this.state.state === 'unsubscribe' ? styles.formTypeActive : ''}`}
-                onClick={(e) => { this.handleFormTypeChange('unsubscribe') }}>
-                Unsubsribe
-              </div>
-            </div>
-          )}
+          
+          { /* Form */}
 
           {this.state.state === 'register' && !this.state.loading && (
             <div className={styles.containerRegister}>
@@ -197,8 +172,8 @@ class Register extends Component {
                     type='text'
                     placeholder='512-555-5555'
                     className={styles.formInput}
-                    value={this.state.formEmail}
-                    onChange={(e) => { this.handleFormInput('formEmail', e.target.value) }}
+                    value={this.state.formPhone}
+                    onChange={(e) => { this.handleFormInput('formPhone', e.target.value) }}
                   />
                 </div>
                 <div className={styles.formField}>
@@ -206,8 +181,8 @@ class Register extends Component {
                   <input
                     placeholder='Zip Code'
                     className={styles.formInput}
-                    value={this.state.formPassword}
-                    onChange={(e) => { this.handleFormInput('formPassword', e.target.value) }}
+                    value={this.state.formZip}
+                    onChange={(e) => { this.handleFormInput('formZip', e.target.value) }}
                   />
                 </div>
 
@@ -221,39 +196,6 @@ class Register extends Component {
                   value='Register'
                 />
 
-              </form>
-            </div>
-          )}
-
-          {this.state.state === 'unsubscribe' && !this.state.loading && (
-            <div className={styles.containerSignIn}>
-
-              <form className={styles.form} onSubmit={this.handleFormSubmit}>
-                <div className={styles.formField}>
-                  <label className={styles.formLabel}>phone</label>
-                  <input
-                    type='text'
-                    placeholder='512-555-5555'
-                    className={styles.formInput}
-                    value={this.state.formEmail}
-                    onChange={(e) => { this.handleFormInput('formEmail', e.target.value) }}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label className={styles.formLabel}>zip code</label>
-                  <input
-                    placeholder='Your Zip Code'
-                    className={styles.formInput}
-                    value={this.state.formPassword}
-                    onChange={(e) => { this.handleFormInput('formPassword', e.target.value) }}
-                  />
-                </div>
-
-                {this.state.formError && (
-                  <div className={styles.formError}>{this.state.formError}</div>
-                )}
-
-                <input className={`buttonPrimaryLarge ${styles.formButton}`} type='submit' value='Sign In' />
               </form>
             </div>
           )}
