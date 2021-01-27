@@ -3,24 +3,14 @@ import {
   Link,
   withRouter,
 } from 'react-router-dom'
-import Loading from '../../fragments/Loading'
 import styles from './Register.module.css'
-import {
-  userRegister,
-  userLogin,
-  userGet,
-  saveSession,
-} from '../../utils'
 
 class Register extends Component {
 
   constructor(props) {
     super(props)
 
-    const pathName = window.location.pathname.replace('/', '')
-
     this.state = {}
-    this.state.state = pathName
     this.state.loading = true
     this.state.error = null
     this.state.formPhone = ''
@@ -76,51 +66,9 @@ class Register extends Component {
 
     this.setState({ loading: true })
 
-    // Validate email
-    if (!this.state.formPhone) {
-      return this.setState({
-        loading: false,
-        formError: 'email is required'
-      })
-    }
+    // TODO SAVE TO DYNAMO
 
-    // Validate password
-    if (!this.state.formZip) {
-      return this.setState({
-        loading: false,
-        formError: 'password is required'
-      })
-    }
-
-    let token
-    try {
-      if (this.state.state === 'register') {
-        token = await userRegister(this.state.formPhone, this.state.formZip)
-      } else {
-        token = await userLogin(this.state.formPhone, this.state.formZip)
-      }
-    } catch (error) {
-      console.log(error)
-      if (error.message) {
-        this.setState({
-          formError: error.message,
-          loading: false
-        })
-      } else {
-        this.setState({
-          formError: 'Sorry, something unknown went wrong.  Please try again.',
-          loading: false
-        })
-      }
-      return
-    }
-
-    // Fetch user record and set session in cookie
-    let user = await userGet(token.token)
-    user = user.user
-    saveSession(user.id, user.email, token.token)
-
-    window.location.replace('/')
+    // window.location.replace('/')
   }
 
   render() {
@@ -162,7 +110,7 @@ class Register extends Component {
           
           { /* Form */}
 
-          {this.state.state === 'register' && !this.state.loading && (
+          {!this.state.loading && (
             <div className={styles.containerRegister}>
 
               <form className={styles.form} onSubmit={this.handleFormSubmit}>
