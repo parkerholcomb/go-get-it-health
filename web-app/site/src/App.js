@@ -6,8 +6,6 @@ import {
 } from 'react-router-dom'
 import Map from './pages/Map/Map'
 import Home from './pages/Home/Home'
-import Dashboard from './pages/Dashboard/Dashboard'
-import { getSession } from './utils'
 import Volunteer from './pages/Volunteer/Volunteer'
 import Register from './pages/Register/Register'
 import About from './pages/About/About'
@@ -48,12 +46,6 @@ export default class App extends Component {
             <About />
           </Route>
 
-          <PrivateRoute
-            exact
-            path='/'
-            component={Dashboard}
-          />
-
         </Switch>
       </Router>
     )
@@ -64,10 +56,10 @@ export default class App extends Component {
  * A component to protect routes.
  * Shows Auth page if the user is not authenticated
  */
-const PrivateRoute = ({ component, ...options }) => {
+// const PrivateRoute = ({ component, ...options }) => {
 
-  const session = getSession()
+//   const session = getSession()
 
-  const finalComponent = session ? Dashboard : Home
-  return <Route {...options} component={finalComponent} />
-}
+//   const finalComponent = session ? Dashboard : Home
+//   return <Route {...options} component={finalComponent} />
+// }
