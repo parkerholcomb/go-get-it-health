@@ -11,7 +11,7 @@ def main(event, context):
     # df = df[['name','type','total_available','last_update']]
     df['total_available'] = df['total_available'].fillna(0)
     df = df[df['total_available'] > 0]
-    df = df.drop_duplicates(subset=['name','last_update'], keep='last')
+    df = df.drop_duplicates(subset=['name','last_update'], keep='last') #last_update = #YYYY-MM-DD
     df = df.sort_values(by='last_update', ascending=False)
     df.to_csv('s3://vaccinate-texas/latest/inventory_updates.csv', index=False)
 

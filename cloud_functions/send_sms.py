@@ -30,7 +30,7 @@ def _top_n(df, n=5):
 
 def _generate_body(zip_code):
     df = _find_nearby_supply(zip_code)
-    url = f"http://www.vaccinatetexas.org.s3-website-us-east-1.amazonaws.com/availability/{zip_code}.html"
+    url = f"https://www.vaccinatetexas.org/search/{zip_code}"
     body = '\n'.join(
         [
             f"COVID Vaccine updates for {zip_code} residents. In the last two days, {df.total_available.sum()} COVID vaccine became "

@@ -3,19 +3,20 @@ import boto3
 from datetime import datetime
 import json
 
-headers = {
-    'Referer': 'https://vaccine.heb.com/',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36',
-}
+def _save_partitions(data, source='heb'):
+    s3_bucket = boto3.resource("s3").Bucket("data-{source}")
+    today = datetime.now().strftime('%Y-%m-%d')
+    hr_min = datetime.now().strftime('%H:%M')
+    s3_bucket.Object(key=f"raw/{today}/{hr_min}/{source}-vaccine-supply.json").put(Body=json.dumps(data))
+    s3_bucket.Object(key=f"raw/latest/{source}-vaccine-supply.json").put(Body=json.dumps(data))
+    
+def _fetch_data():
+    response = requests.get('https://heb-ecom-covid-vaccine.hebdigital-prd.com/vaccine_locations.json')
+    return response.json()['locations']
 
 def main(event, context):
-    response = requests.get('https://heb-ecom-covid-vaccine.hebdigital-prd.com/vaccine_locations.json', headers=headers)
-    data = response.json()['locations']
-    s3_bucket = boto3.resource("s3").Bucket("data-heb")
-    fname = "heb-vaccine-locations.json"
-    raw_key = f"raw/{datetime.now().strftime('%Y-%m-%d')}/{datetime.now().strftime('%H:%M')}/{fname}"
-    s3_bucket.Object(key=raw_key).put(Body=json.dumps(data))
-    s3_bucket.Object(key=f"raw/latest/{fname}").put(Body=json.dumps(data))
+    data = _fetch_data()
+    _save_partitions(data)
     msg = "captured from heb"
     print(msg)
     response = {
