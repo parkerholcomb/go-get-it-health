@@ -1,6 +1,5 @@
 import pandas as pd 
 
-
 def fetch_tdem_direct():
     return pd.read_csv("https://genesis.soc.texas.gov/files/accessibility/vaccineprovideraccessibilitydata.csv")
 
