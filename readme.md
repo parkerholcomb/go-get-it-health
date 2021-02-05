@@ -1,12 +1,9 @@
-# Project Goals:
+# About
 
-- allow people to get push notifications when vaccine supply is available in their area
+This is the analytics repo for the vaccinatetexas.org project. App located here[todo]
 
-### Ideas 
+# VaccinateTexas.org
 
-- want to help? <todo add airtable form>
+The mission of VaccinateTexas is to empower Texans with the information they need to advocate for their own vaccination. [Register](https://www.vaccinatetexas.org) to get SMS push notifications when there is a new vaccine "drop" in your area.
 
-
-### About the underlying data
-
-- pulled from Texas Division of Emergency Management (TDEM)
+![](https://vaccinate-texas-public.s3.amazonaws.com/vaccinate-texas-og-img.png)
