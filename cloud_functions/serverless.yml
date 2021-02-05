@@ -13,6 +13,7 @@ provider:
   name: aws
   runtime: python3.8
   timeout: 60
+  profile: vax
   lambdaHashingVersion: 20201221
   iamRoleStatements:
     - Effect: "Allow"
@@ -45,12 +46,9 @@ functions:
       - http:
           path: send-sms
           method: post
-  fetch_supply: 
-    handler: fetch_supply.main
+  fetch_tdem: 
+    handler: fetch_tdem.main
     events: 
-      - http: 
-          path: fetch-supply
-          method: post
       - schedule: 
           rate: rate(1 hour)
 
