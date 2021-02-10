@@ -40,12 +40,11 @@ custom:
       - botocore
     
 functions:
-  send_sms:
-    handler: send_sms.main
-    events:
-      - http:
-          path: send-sms
-          method: post
+  fetch_heb: 
+    handler: fetch_heb.main
+    events: 
+      - schedule: 
+          rate: rate(10 minutes)
   fetch_tdem: 
     handler: fetch_tdem.main
     events: 

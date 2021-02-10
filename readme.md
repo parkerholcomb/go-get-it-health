@@ -1,6 +1,6 @@
 # About
 
-This is the analytics repo for the vaccinatetexas.org project. App located here[todo]
+This is the analytics repo for the vaccinatetexas.org project. App located [here](https://github.com/parquar/vaccinate-texas)
 
 # VaccinateTexas.org
 
