@@ -1,6 +1,26 @@
+import boto3
 import pandas as pd
 from datetime import datetime
 import regex as re
+
+
+def _get_file_list(bucket_nm, prefix):
+    s3r = boto3.resource("s3")
+    bucket = s3r.Bucket(bucket_nm)
+    file_list = bucket.objects.filter(Prefix=prefix)
+
+    return file_list
+
+
+def _csv_to_pandas(bucket_nm, ky=None):
+    s3c = boto3.client("s3")
+    csv_obj = s3c.get_object(Bucket=bucket_nm,
+                             Key=ky)
+    csv_body = csv_obj['Body']
+    csv_string = csv_body.read().decode('utf-8')
+    df = pd.read_csv(StringIO(csv_string), sep='\t')
+
+    return df
 
 
 def _calc_drops(today, hr_min, new_df, old_df):
@@ -57,33 +77,26 @@ def _calc_drops(today, hr_min, new_df, old_df):
     return drop_df
 
 
-def _save_partitions(today, hr_min, df, drop_df, source='tdem'):
-    df.to_csv(f's3://data-{source}/test/raw/{today}/{hr_min}/{source}-vaccine-supply.csv', index=False)
-    df.to_csv(f's3://data-{source}/test/raw/latest/{source}-vaccine-supply.csv', index=False)
+def _save_drops(today, hr_min, drop_df, source='tdem'):
     drop_df.to_csv(f's3://data-{source}/test/changes/{today}/{hr_min}/{source}-daily-changes.csv', index=False)
 
 
-def main(event, context):
-    today = datetime.now().strftime('%Y-%m-%d')
-    hr_min = datetime.now().strftime('%H:%M')
+def main():
+    hist_files = [fl for fl in _get_file_list('data-tdem', 'raw') if not fl.key.startswith('raw/latest')]
+    old_df = None
 
-    df = pd.read_csv("https://genesis.soc.texas.gov/files/accessibility/vaccineprovideraccessibilitydata.csv")
+    for fl_path in hist_files:
+        new_df = _csv_to_pandas('data-tdem', fl_path)
+        if old_df == None:
+            old_df = new_df.copy()
+        else:
+            path_split = fl_path.key.split('/')
+            today = path_split[1]
+            hr_min = path_split[2]
+            drop_df = _calc_drops(today, hr_min, new_df, old_df)
+            _save_drops(today, hr_min, drop_df)
+            old_df = new_df.copy()
+            msg = f"{len(df)} records moved to S3 at {datetime.now().strftime('%Y-%m-%d')}"
+            print(msg)
 
-    s3c = boto3.client("s3")
-    latest_obj = s3c.get_object(Bucket='data-tdem',
-                                Key='raw/latest/tdem-vaccine-supply.csv')
-    latest_body = latest_obj['Body']
-    latest_string = latest_body.read().decode('utf-8')
-    latest_df = pd.read_csv(StringIO(latest_string), sep='\t')
-    drop_df = _calc_drops(today, hr_min, df, latest_df)
-
-    _save_partitions(today, hr_min, df, drop_df)
-    msg = f"{len(df)} records moved to S3 at {datetime.now().strftime('%Y-%m-%d')}"
-    print(msg)
-    response = {
-        "statusCode": 200,
-        "body": msg
-    }
-    return response
-
-# main("","")
+# main()
