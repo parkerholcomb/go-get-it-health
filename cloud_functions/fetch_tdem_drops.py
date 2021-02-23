@@ -55,7 +55,7 @@ def _calc_drops(today, hr_min, new_df, old_df):
                                     'drop_ct', 'jab_ct']],
                          changes[['name_id', 'location_type', 'extract_dttm', 'last_update_dttm',
                                   'drop_ct', 'jab_ct']]],
-                        axis=1)
+                        axis=0)
 
     return drop_df
 
