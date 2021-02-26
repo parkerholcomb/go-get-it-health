@@ -41,7 +41,9 @@ def _calc_drops(today, hr_min, new_df, old_df):
                            for shp, avail
                            in zip(new_sites['new_shipped'],
                                   new_sites['new_available'])]
-    new_sites.rename(columns={'new_shipped': 'drop_ct'}, inplace=True)
+    new_sites['drop_ct'] = new_sites['new_shipped']
+    new_sites['old_shipped'] = 0
+    new_sites['old_available'] = 0
 
     updates = comp_df[comp_df['old_shipped'].notnull()].copy()
     updates['drop_ct'] = [new - old
@@ -57,9 +59,11 @@ def _calc_drops(today, hr_min, new_df, old_df):
     changes = updates[(updates['drop_ct'] > 0) | (updates['jab_ct'] > 0)].reset_index(drop=True)
 
     drop_df = pd.concat([new_sites[['name_id', 'location_type', 'extract_dttm', 'last_update_dttm',
-                                    'drop_ct', 'jab_ct']],
+                                    'drop_ct', 'jab_ct', 'old_shipped', 'old_available',
+                                    'new_shipped', 'new_available']],
                          changes[['name_id', 'location_type', 'extract_dttm', 'last_update_dttm',
-                                  'drop_ct', 'jab_ct']]],
+                                  'drop_ct', 'jab_ct', 'old_shipped', 'old_available',
+                                  'new_shipped', 'new_available']]],
                         axis=0)
 
     return drop_df
@@ -88,6 +92,7 @@ def main():
                                             'new_available': 'old_available'}).copy()
             msg = f"{len(new_df)} records saved to S3 at {datetime.now().strftime('%Y-%m-%d %H:%M')}"
             print(msg)
+    drop_df.to_csv(f's3://data-tdem/test/raw/latest/tdem-vaccine-supply.csv', index=False)
 
 
 main()
