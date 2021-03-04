@@ -37,32 +37,37 @@ def _calc_drops(today, hr_min, new_df, old_df):
 
     comp_df = new_counts.merge(old_counts, on='name_id', how='left')
     new_sites = comp_df[comp_df['old_shipped'].isnull()].reset_index(drop=True)
+    new_sites['ship_ct'] = new_sites['new_shipped']
+    new_sites['avail_ct'] = new_sites['new_available']
     new_sites['jab_ct'] = [0 if avail == 0 else shp - avail
                            for shp, avail
                            in zip(new_sites['new_shipped'],
                                   new_sites['new_available'])]
-    new_sites['drop_ct'] = new_sites['new_shipped']
     new_sites['old_shipped'] = 0
     new_sites['old_available'] = 0
 
     updates = comp_df[comp_df['old_shipped'].notnull()].copy()
-    updates['drop_ct'] = [new - old
+    updates['ship_ct'] = [new - old
                           for new, old
                           in zip(updates['new_shipped'],
                                  updates['old_shipped'])]
-    updates['jab_ct'] = [0 if old == 0 else old - (new - drp)
-                         for old, new, drp
+    updates['avail_ct'] = [0 if (new - old) < 0 else (new - old)
+                           for new, old
+                           in zip(updates['new_available'],
+                                  updates['old_available'])]
+    updates['jab_ct'] = [0 if old == 0 else old - (new - shp)
+                         for old, new, shp
                          in zip(updates['old_available'],
                                 updates['new_available'],
-                                updates['drop_ct'])]
+                                updates['ship_ct'])]
 
-    changes = updates[(updates['drop_ct'] > 0) | (updates['jab_ct'] > 0)].reset_index(drop=True)
+    changes = updates[(updates['ship_ct'] > 0) | (updates['avail_ct'] > 0) | (updates['jab_ct'] > 0)].reset_index(drop=True)
 
     drop_df = pd.concat([new_sites[['name_id', 'location_type', 'extract_dttm', 'last_update_dttm',
-                                    'drop_ct', 'jab_ct', 'old_shipped', 'old_available',
+                                    'ship_ct', 'avail_ct', 'jab_ct', 'old_shipped', 'old_available',
                                     'new_shipped', 'new_available']],
                          changes[['name_id', 'location_type', 'extract_dttm', 'last_update_dttm',
-                                  'drop_ct', 'jab_ct', 'old_shipped', 'old_available',
+                                  'ship_ct', 'avail_ct', 'jab_ct', 'old_shipped', 'old_available',
                                   'new_shipped', 'new_available']]],
                         axis=0)
 
