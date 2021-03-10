@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 
 def _save_partitions(data, source='heb'):
-    s3_bucket = boto3.resource("s3").Bucket("data-{source}")
+    s3_bucket = boto3.resource("s3").Bucket(f"data-{source}")
     today = datetime.now().strftime('%Y-%m-%d')
     hr_min = datetime.now().strftime('%H:%M')
     s3_bucket.Object(key=f"raw/{today}/{hr_min}/{source}-vaccine-supply.json").put(Body=json.dumps(data))
@@ -25,4 +25,5 @@ def main(event, context):
     }
     return response
 
-# main("","")
+if __name__ == "__main__":
+    main("","")
