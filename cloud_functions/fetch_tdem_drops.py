@@ -89,7 +89,7 @@ def main(event, context):
     drop_df = _calc_drops(today, hr_min, df, latest_df)
 
     _save_partitions(today, hr_min, df, drop_df)
-    msg = f"{len(df)} records moved to S3 at {datetime.now().strftime('%Y-%m-%d')}"
+    msg = f"{len(df)} records from {today} {hr_min} moved to S3 at {datetime.now().strftime('%Y-%m-%d')}"
     print(msg)
     response = {
         "statusCode": 200,

@@ -15,6 +15,9 @@ def _get_file_list(bucket_nm, prefix):
 
 def _calc_drops(today, hr_min, new_df, old_df):
     dttm = datetime.strptime(f'{today} {hr_min}', '%Y-%m-%d %H:%M')
+    print(new_df.columns)
+    new_df['NAME'].fillna('unknownname', inplace=True)
+    new_df['ZIP'].fillna('00000', inplace=True)
     new_df['name_id'] = [f'{re.sub("[^0-9a-zA-Z]+", "", nm).lower()}#{zp}'
                          for nm, zp
                          in zip(new_df['NAME'], new_df['ZIP'])]
@@ -95,7 +98,7 @@ def main():
             _save_drops(today, hr_min, drop_df)
             old_df = new_df.rename(columns={'new_shipped': 'old_shipped',
                                             'new_available': 'old_available'}).copy()
-            msg = f"{len(new_df)} records saved to S3 at {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+            msg = f"{len(new_df)} records from {today} {hr_min} saved to S3 at {datetime.now().strftime('%Y-%m-%d %H:%M')}"
             print(msg)
     drop_df.to_csv(f's3://data-tdem/test/raw/latest/tdem-vaccine-supply.csv', index=False)
 
