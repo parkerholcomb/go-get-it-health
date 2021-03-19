@@ -1,3 +1,5 @@
+# https://towardsdatascience.com/how-to-install-python-packages-for-aws-lambda-layer-74e193c76a91
+
 # https://www.serverless.com/blog/serverless-python-packaging/
 # $ virtualenv venv --python=python3
 # $ source venv/bin/activate
@@ -11,7 +13,7 @@ frameworkVersion: '2'
 
 provider:
   name: aws
-  runtime: python3.8
+  runtime: python3.7
   timeout: 60
   profile: default
   lambdaHashingVersion: 20201221
@@ -42,11 +44,23 @@ custom:
 functions:
   fetch_heb: 
     handler: fetch_heb.main
+    layers:
+      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
     events: 
       - schedule: 
           rate: rate(10 minutes)
+  heb_push_notification: 
+    handler: heb_push_notification.main
+    layers:
+      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
+    events: 
+      - schedule: 
+          rate: rate(10 minutes)
+      
   fetch_tdem: 
     handler: fetch_tdem.main
+    layers:
+      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
     events: 
       - schedule: 
           rate: rate(1 hour)

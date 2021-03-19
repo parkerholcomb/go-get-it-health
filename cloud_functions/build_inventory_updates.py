@@ -6,8 +6,7 @@ def main(event, context):
     t0 = int(time.time())
     s3_bucket = boto3.resource('s3').Bucket('data-tdem')
     raw_keys = [obj.key for obj in s3_bucket.objects.all() if ~obj.key.startswith('latest')]
-    dfs = [pd.read_csv(f"s3://data-tdem/{key}", delimiter='\t') for key in raw_keys]
-    df = pd.concat(dfs)
+    df = pd.concat([pd.read_csv(f"s3://data-tdem/{key}") for key in raw_keys])
     # df = df[['name','type','total_available','last_update']]
     df['total_available'] = df['total_available'].fillna(0)
     df = df[df['total_available'] > 0]
