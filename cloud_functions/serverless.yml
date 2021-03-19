@@ -1,13 +1,3 @@
-# https://towardsdatascience.com/how-to-install-python-packages-for-aws-lambda-layer-74e193c76a91
-
-# https://www.serverless.com/blog/serverless-python-packaging/
-# $ virtualenv venv --python=python3
-# $ source venv/bin/activate
-# $ pip install ***
-# $ pip freeze > requirements.txt
-# $ npm init
-# $ npm install --save serverless-python-requirements
-
 service: vaccinate-texas
 frameworkVersion: '2'
 
@@ -26,37 +16,8 @@ provider:
       Action:
         - secretsmanager:*
       Resource: '*'
-
-package:
-  exclude:
-    - venv/**
-
-plugins:
-  - serverless-python-requirements
-
-custom:
-  pythonRequirements:
-    dockerizePip: non-linux
-    noDeploy: 
-      - boto3
-      - botocore
     
 functions:
-  fetch_heb: 
-    handler: fetch_heb.main
-    layers:
-      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
-    events: 
-      - schedule: 
-          rate: rate(10 minutes)
-  heb_push_notification: 
-    handler: heb_push_notification.main
-    layers:
-      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
-    events: 
-      - schedule: 
-          rate: rate(10 minutes)
-      
   fetch_tdem: 
     handler: fetch_tdem.main
     layers:
@@ -64,4 +25,29 @@ functions:
     events: 
       - schedule: 
           rate: rate(1 hour)
+  fetch_heb: 
+    handler: fetch_heb.main
+    layers:
+      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
+    events: 
+      - schedule: 
+          rate: rate(10 minutes)
+  push_heb_notification: 
+    handler: push_heb_notification.main
+    layers:
+      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
+    events: 
+      - schedule: 
+          rate: rate(10 minutes)
+  
 
+
+# https://towardsdatascience.com/how-to-install-python-packages-for-aws-lambda-layer-74e193c76a91
+
+# https://www.serverless.com/blog/serverless-python-packaging/
+# $ virtualenv venv --python=python3
+# $ source venv/bin/activate
+# $ pip install ***
+# $ pip freeze > requirements.txt
+# $ npm init
+# $ npm install --save serverless-python-requirements
