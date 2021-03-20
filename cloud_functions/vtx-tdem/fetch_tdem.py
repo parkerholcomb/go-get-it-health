@@ -18,4 +18,5 @@ def main(event, context):
     }
     return response
 
-# main("","")
+if __name__ == "__main__":
+    main("","")
