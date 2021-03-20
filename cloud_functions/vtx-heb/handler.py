@@ -7,16 +7,15 @@ from geopy.geocoders import Nominatim
 import requests
 from datetime import datetime
 
+s3_bucket = boto3.resource('s3').Bucket('data-heb')
+
 ## first grab and save updated data
 def fetch_and_save_data(source='heb'):
     response = requests.get('https://heb-ecom-covid-vaccine.hebdigital-prd.com/vaccine_locations.json')
     data = response.json()['locations']
-    s3_bucket = boto3.resource("s3").Bucket(f"data-{source}")
-    today = datetime.now().strftime('%Y-%m-%d')
-    hr_min = datetime.now().strftime('%H:%M')
-    s3_bucket.Object(key=f"raw/{today}/{hr_min}/{source}-vaccine-supply.json").put(Body=json.dumps(data))
+    s3_bucket.Object(key=f"raw/{datetime.now().strftime('%Y-%m-%d')}/{datetime.now().strftime('%H:%M')}/{source}-vaccine-supply.json").put(Body=json.dumps(data))
     s3_bucket.Object(key=f"raw/latest/{source}-vaccine-supply.json").put(Body=json.dumps(data))
-    print("heb data updated")
+    print(f"{source} data updated")
 
 ## then all the messaging logic
 secrets_client = boto3.session.Session().client(service_name='secretsmanager', region_name="us-east-1")
@@ -25,7 +24,6 @@ secret = json.loads(get_secret_value_response['SecretString'])
 client = Client(secret['TWILIO_SID'], secret['TWILIO_SECRET'])
 
 def _get_current_prev_dfs():
-    s3_bucket = boto3.resource('s3').Bucket('data-heb')
     raw_keys = [obj.key for obj in s3_bucket.objects.all() if not obj.key.startswith('raw/latest')]
     prev_df = pd.read_json(f"s3://data-heb/{raw_keys[-2]}")
     current_df = pd.read_json(f"s3://data-heb/{raw_keys[-1]}")
@@ -68,17 +66,17 @@ def _geocode_zip(zip_ = "78741"):
         location = geolocator.geocode(zip_)
         return f"{location.latitude},{location.longitude}"
     
-def _generate_body(df):
+def _generate_body(df, zip_):
     body = ['New availability detected at HEB:\n']
     for idx in df.index:
         body.append(f"💉 {df.loc[idx]['name']} has {df.loc[idx]['openAppointmentSlots']} appoinments, {df.loc[idx]['miles_away']} miles away")
-    body.append('\nVisit https://vaccine.heb.com/scheduler to schedule. #goandgetgetit')
+    body.append(f'\nVisit https://vaccine.heb.com/scheduler?q={zip_} to schedule. #goandgetgetit')
     return '\n'.join(body)
 
 def send_msg(zip_, to_, env = 'dev'):
     locations_df = _get_filtered_location_updates(zip_)
     if len(locations_df) > 0:
-        body = _generate_body(locations_df)
+        body = _generate_body(locations_df, zip_)
         from_ = "+1 512 488 6383"
         if env == 'dev':
             print(body)
@@ -91,7 +89,7 @@ def send_msg(zip_, to_, env = 'dev'):
     else: 
         print(f'no updates within 100 miles for {zip_}')
 
-def process_msgs(env = 'dev'):
+def process_push_notifications(env = 'dev'):
     if env == 'dev': 
         print("DEBUG MODE - WILL NOT SEND SMS")
         to_df = pd.read_csv("./to_list-dev.csv")
@@ -102,9 +100,11 @@ def process_msgs(env = 'dev'):
         send_msg(to_df['zip_'][i], to_df['to_'][i], env)
 
 def main(event, context): 
+    # env = 'dev'
+    env = 'stage'
     fetch_and_save_data()
-    # process_msgs('dev') # dev prints to consolve
-    process_msgs('stage') # sends sms
+    process_push_notifications(env) # dev prints to consolve
+    
     response = {
         "statusCode": 200,
         "body": 'success'
