@@ -40,14 +40,3 @@ functions:
       - schedule: 
           rate: rate(10 minutes)
   
-
-
-# https://towardsdatascience.com/how-to-install-python-packages-for-aws-lambda-layer-74e193c76a91
-
-# https://www.serverless.com/blog/serverless-python-packaging/
-# $ virtualenv venv --python=python3
-# $ source venv/bin/activate
-# $ pip install ***
-# $ pip freeze > requirements.txt
-# $ npm init
-# $ npm install --save serverless-python-requirements

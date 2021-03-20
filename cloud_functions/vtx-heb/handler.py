@@ -4,7 +4,21 @@ from geopy.distance import geodesic
 import boto3
 import json
 from geopy.geocoders import Nominatim
+import requests
+from datetime import datetime
 
+## first grab and save updated data
+def fetch_and_save_data(source='heb'):
+    response = requests.get('https://heb-ecom-covid-vaccine.hebdigital-prd.com/vaccine_locations.json')
+    data = response.json()['locations']
+    s3_bucket = boto3.resource("s3").Bucket(f"data-{source}")
+    today = datetime.now().strftime('%Y-%m-%d')
+    hr_min = datetime.now().strftime('%H:%M')
+    s3_bucket.Object(key=f"raw/{today}/{hr_min}/{source}-vaccine-supply.json").put(Body=json.dumps(data))
+    s3_bucket.Object(key=f"raw/latest/{source}-vaccine-supply.json").put(Body=json.dumps(data))
+    print("heb data updated")
+
+## then all the messaging logic
 secrets_client = boto3.session.Session().client(service_name='secretsmanager', region_name="us-east-1")
 get_secret_value_response = secrets_client.get_secret_value(SecretId='vaccinate-texas')
 secret = json.loads(get_secret_value_response['SecretString'])
@@ -36,9 +50,8 @@ def _get_filtered_location_updates(zip_, max_distance = 100):
     df = current_df[current_df.index.isin(updates)]
     
     # then let's geocode it 
-    df['lat_lng'] = df.apply(_geocode, axis=1)
-    zip_lat_lng = _geocode_zip(zip_)
-    df['miles_away'] = df['lat_lng'].apply(lambda location_lat_lng: int(geodesic(location_lat_lng, zip_lat_lng).miles))
+    df['lat_lng'] = df.apply(lambda row: f"{row['latitude']},{row['longitude']}", axis=1)
+    df['miles_away'] = df['lat_lng'].apply(lambda location_lat_lng: int(geodesic(location_lat_lng, _geocode_zip(zip_)).miles))
     df = df[df['miles_away'] < max_distance].sort_values(by='miles_away')
     print(df)
     return df
@@ -54,9 +67,6 @@ def _geocode_zip(zip_ = "78741"):
         geolocator = Nominatim(user_agent="vtx")
         location = geolocator.geocode(zip_)
         return f"{location.latitude},{location.longitude}"
-
-def _geocode(row):
-    return f"{row['latitude']},{row['longitude']}"
     
 def _generate_body(df):
     body = ['New availability detected at HEB:\n']
@@ -65,43 +75,36 @@ def _generate_body(df):
     body.append('\nVisit https://vaccine.heb.com/scheduler to schedule. #goandgetgetit')
     return '\n'.join(body)
 
-def send_msg(zip_, to_, debug = False):
+def send_msg(zip_, to_, env = 'dev'):
     locations_df = _get_filtered_location_updates(zip_)
     if len(locations_df) > 0:
         body = _generate_body(locations_df)
         from_ = "+1 512 488 6383"
-        if debug == False: 
+        if env == 'dev':
+            print(body)
+            resp = f"Message sent {from_} to {to_} with locations -- ENV=DEV"
+        elif env in ['stage','prod']: 
             msg = client.messages.create(body=body,from_=from_,to=to_)
             resp = f"Message sent {from_} to {to_} with locations -- {msg.sid}"
             print(resp)
-        else:
-            print(body)
-            resp = f"Message sent {from_} to {to_} with locations -- DEBUG=TRUE"
         return resp
-
     else: 
         print(f'no updates within 100 miles for {zip_}')
 
-def main(event, context): 
-    # debug = True
-    debug = False
-    if debug: 
+def process_msgs(env = 'dev'):
+    if env == 'dev': 
         print("DEBUG MODE - WILL NOT SEND SMS")
         to_df = pd.read_csv("./to_list-dev.csv")
     else:
         to_df = pd.read_csv("./to_list-prod.csv")
-    
     print(to_df)
-    for i in range(len(to_df)):
-        obj = to_df.loc[i]
-        send_msg(obj['zip_'], obj['to_'], debug)
-        # send_msg('75001', "+1 713 824 8581") # parker
-        # send_msg('78741', "+1 713 824 8581") # parker
-        # send_msg('78741', "‭+1 585 329 4284‬") # steve denero
-        # send_msg('78741', "‭‭+1 817 637 2734‬") # scott wynd
-        # send_msg('78741', "‭‭+1 ‭650 740 9437‬‬") # daniel w
-        # send_msg('75001', "‭‭‭+1 214 490 5329‬‬‬") # dad
-    
+    for i in to_df.index:
+        send_msg(to_df['zip_'][i], to_df['to_'][i], env)
+
+def main(event, context): 
+    fetch_and_save_data()
+    process_msgs('dev') # dev prints to consolve
+    # process_msgs('stage') # sends sms
     response = {
         "statusCode": 200,
         "body": 'success'
