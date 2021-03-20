@@ -102,6 +102,7 @@ def process_push_notifications(env = 'dev'):
 def main(event, context): 
     # env = 'dev'
     env = 'stage'
+    print(f"ENV: {env}")
     fetch_and_save_data()
     process_push_notifications(env) # dev prints to consolve
     
