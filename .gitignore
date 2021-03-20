@@ -22,3 +22,6 @@ var/
 .DS_Store
 # Serverless directories
 .serverless
+
+
+.cache**
