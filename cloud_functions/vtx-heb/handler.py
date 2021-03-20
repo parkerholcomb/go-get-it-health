@@ -1,11 +1,16 @@
 import pandas as pd
 from twilio.rest import Client
 from geopy.distance import geodesic
+from geopy.geocoders import Nominatim
 import boto3
 import json
-from geopy.geocoders import Nominatim
 import requests
 from datetime import datetime
+
+secrets_client = boto3.session.Session().client(service_name='secretsmanager', region_name="us-east-1")
+get_secret_value_response = secrets_client.get_secret_value(SecretId='vaccinate-texas')
+secret = json.loads(get_secret_value_response['SecretString'])
+client = Client(secret['TWILIO_SID'], secret['TWILIO_SECRET'])
 
 s3_bucket = boto3.resource('s3').Bucket('data-heb')
 
@@ -17,11 +22,7 @@ def fetch_and_save_data(source='heb'):
     s3_bucket.Object(key=f"raw/latest/{source}-vaccine-supply.json").put(Body=json.dumps(data))
     print(f"{source} data updated")
 
-## then all the messaging logic
-secrets_client = boto3.session.Session().client(service_name='secretsmanager', region_name="us-east-1")
-get_secret_value_response = secrets_client.get_secret_value(SecretId='vaccinate-texas')
-secret = json.loads(get_secret_value_response['SecretString'])
-client = Client(secret['TWILIO_SID'], secret['TWILIO_SECRET'])
+## then all the notifications logic
 
 def _get_current_prev_dfs():
     raw_keys = [obj.key for obj in s3_bucket.objects.all() if not obj.key.startswith('raw/latest')]
@@ -32,9 +33,9 @@ def _get_current_prev_dfs():
 def _get_filtered_location_updates(zip_, max_distance = 100):
     prev_df,current_df = _get_current_prev_dfs()
     current_df = current_df[current_df['openAppointmentSlots'] > 0]
-    prev_df[prev_df['name'].isin(current_df['name'])]
+    prev_df = prev_df[prev_df['name'].isin(current_df['name'])]
 
-    # # add some random availability
+    # # add some random availability for testing
     # for i in [5, 24, 45, 110, 127, 200]:
     #     current_df['openAppointmentSlots'][i] = 100
     # # and have one be the the same as the last
@@ -67,7 +68,7 @@ def _geocode_zip(zip_ = "78741"):
         return f"{location.latitude},{location.longitude}"
     
 def _generate_body(df, zip_):
-    body = ['New availability detected at HEB:\n']
+    body = ['HEB appointment detected:\n']
     for idx in df.index:
         body.append(f"💉 {df.loc[idx]['name']} has {df.loc[idx]['openAppointmentSlots']} appoinments, {df.loc[idx]['miles_away']} miles away")
     body.append(f'\nVisit https://vaccine.heb.com/scheduler?q={zip_} to schedule. #goandgetgetit')
