@@ -103,8 +103,8 @@ def process_msgs(env = 'dev'):
 
 def main(event, context): 
     fetch_and_save_data()
-    process_msgs('dev') # dev prints to consolve
-    # process_msgs('stage') # sends sms
+    # process_msgs('dev') # dev prints to consolve
+    process_msgs('stage') # sends sms
     response = {
         "statusCode": 200,
         "body": 'success'
