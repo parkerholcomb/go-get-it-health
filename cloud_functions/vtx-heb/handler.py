@@ -32,7 +32,7 @@ def _get_current_prev_dfs():
 
 def _get_filtered_location_updates(zip_, max_distance = 100):
     prev_df,current_df = _get_current_prev_dfs()
-    current_df = current_df[current_df['openAppointmentSlots'] > 0]
+    current_df = current_df[current_df['openAppointmentSlots'] > 1]
     prev_df = prev_df[prev_df['name'].isin(current_df['name'])]
 
     # # add some random availability for testing
@@ -68,7 +68,7 @@ def _geocode_zip(zip_ = "78741"):
         return f"{location.latitude},{location.longitude}"
     
 def _generate_body(df, zip_):
-    body = ['HEB appointment detected:\n']
+    body = []
     for idx in df.index:
         body.append(f"💉 {df.loc[idx]['name']} has {df.loc[idx]['openAppointmentSlots']} appoinments, {df.loc[idx]['miles_away']} miles away")
     body.append(f'\nVisit https://vaccine.heb.com/scheduler?q={zip_} to schedule. #goandgetgetit')
