@@ -24,6 +24,7 @@ def _extract_valid_zip(body):
     return None
 
 def subscribe(to_, zip_, radius, msgContent):
+    env = "stage"
     data = dict(
         to_ = to_,
         zip_ = zip_,
@@ -32,7 +33,7 @@ def subscribe(to_, zip_, radius, msgContent):
         meta = msgContent
     )
     s3_bucket = boto3.resource('s3').Bucket('vtx-subscriptions')
-    subscription_key = f"{to_}#{zip_}+{radius}"
+    subscription_key = f"{env}/{to_}#{zip_}+{radius}"
     s3_bucket.Object(key=subscription_key).put(Body=json.dumps(data))
     print("subscription added:", subscription_key)
     return f"subscription_key {subscription_key} added"
