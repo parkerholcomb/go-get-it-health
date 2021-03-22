@@ -26,7 +26,6 @@ def fetch_and_save_data(source='tdem'):
     print("tdem data saved")
 
 ## then lets do the notification logic
-
 def _get_current_prev_dfs(source = 'tdem'):
     raw_keys = [obj.key for obj in s3_bucket.objects.all() if obj.key.startswith('raw') and ~obj.key.startswith('raw/latest')]
     prev_df = pd.read_csv(f"s3://data-{source}/{raw_keys[-2]}")
