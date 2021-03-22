@@ -1,7 +1,7 @@
 from lib import Notifier
 
 def main(event, context):
-    notifier = Notifier('heb', 'dev')
+    notifier = Notifier('heb', 'stage')
     count = notifier.process_push_notifications()
     return f'pushed to {count} subscribers'
 

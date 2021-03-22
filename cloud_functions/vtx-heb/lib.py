@@ -56,11 +56,12 @@ class Notifier:
     def __init__(self, source, env = 'stage'):
         self.env = env
         self.source = source
-        self.current_df, self.prev_df = Fetcher().get_current_prev_dfs()
-        self.messager = Messager()
+        fetcher = Fetcher()
+        self.current_df, self.prev_df = fetcher.get_current_prev_dfs()
         self.zip_geo_cache = self._load_zip_geo_cache()
-        self.subscribers = self.load_subscribers()
         self.geocode_dfs()
+        self.subscribers = self.load_subscribers()
+        self.messager = Messager()
 
     def geocode_dfs(self):
         self.current_df['lat_lng'] = self.current_df.apply(lambda row: f"{row['latitude']},{row['longitude']}", axis=1)
@@ -78,7 +79,7 @@ class Notifier:
                     dict(
                         to_ = key.split("#")[0],
                         zip_ = key.split("#")[1].split("+")[0],
-                        radius = key.split("#")[1].split("+")[1]
+                        radius = int(key.split("#")[1].split("+")[1])
                     )
                 )
             except: 
@@ -101,19 +102,30 @@ class Notifier:
             location = geolocator.geocode(zip_str)
             return f"{location.latitude},{location.longitude}"
 
+    @staticmethod
+    def _miles_away(lat_lng_a, lat_lng_b):
+        try:
+            return int(geodesic(lat_lng_a, lat_lng_b).miles)
+        except:
+            return 9999
+    
     def get_filtered_location_updates(self, subscriber):
         old_df, new_df = self.prev_df, self.current_df
+        print(subscriber)
         # first filter out locations with 0 appointments
         new_df = new_df[new_df['openAppointmentSlots'] > 1]
         # then filter out locations outside max radius
         zip_lat_lng = self.geocode_zip(subscriber['zip_'])
-        new_df['miles_away'] = new_df['lat_lng'].apply(lambda location_lat_lng: int(geodesic(location_lat_lng, zip_lat_lng).miles))
+        # new_df['miles_away'] = new_df['lat_lng'].apply(lambda location_lat_lng: int(geodesic(location_lat_lng, zip_lat_lng).miles))
+        new_df['miles_away'] = new_df['lat_lng'].apply(self._miles_away, args=(zip_lat_lng,))
+        
         new_df = new_df[new_df['miles_away'] < subscriber['radius']].sort_values(by='miles_away')
         # then filter down old_df so we're apples to apples
         old_df = old_df[old_df['name'].isin(new_df['name'])]
         
         # now find the delta, and return updates
         new_df['appts_delta'] = new_df['openAppointmentSlots'] - old_df['openAppointmentSlots']
+        print(new_df)
         return new_df[new_df['appts_delta'] > 1]
 
     @staticmethod
