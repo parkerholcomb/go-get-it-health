@@ -36,8 +36,8 @@ def send_sms(to_, body):
     print(resp)
 
 def _extract_valid_zip(body):
-    with open("https://vtx-public.s3.amazonaws.com/tx_zip_geo_cache.json", 'r') as f:
-        data = json.load(f)
+    s3_bucket = boto3.resource('s3').Bucket('vtx-public')
+    data = json.load(s3_bucket.Object(key='tx_zip_geo_cache.json').get()['Body'])
     valid_zips = data.keys()
     tokens = body.split(" ")
     for token in tokens:
@@ -71,19 +71,20 @@ def send_subscribe_confirmation(from_, zip_, radius = 100):
 def try_suscribe(msgContent):
     body = msgContent['Body'][0]
     from_ = body = msgContent['From'][0]
-    try: 
-        zip_ = _extract_valid_zip(body)
-        subscribe(from_, zip_, msgContent)
-        send_subscribe_confirmation(from_, zip_)
-    except:
-        send_invalid_repsonse(from_)
+    
+    zip_ = _extract_valid_zip(body)
+    subscribe(from_, zip_, msgContent)
+    send_subscribe_confirmation(from_, zip_)
+    # except:
+    #     send_invalid_repsonse(from_)
 
 def main(event, context):
     print("event:", event)
-    print("context:", context)
+    # print("context:", context)
     
     msgContent = _parse_inbound_msg(event)
     print("msgContent", msgContent)
+    try_suscribe(msgContent)
 
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
