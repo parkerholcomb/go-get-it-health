@@ -33,7 +33,7 @@ def subscribe(to_, zip_, radius, msgContent):
         meta = msgContent
     )
     s3_bucket = boto3.resource('s3').Bucket('vtx-subscriptions')
-    subscription_key = f"{to_}#{zip_}"
+    subscription_key = f"{to_}#{zip_}+{radius}"
     s3_bucket.Object(key=subscription_key).put(Body=json.dumps(data))
     print("subscription added:", subscription_key)
     
@@ -47,7 +47,7 @@ def main(event, context):
     body = msgContent['Body'][0]
     from_ = msgContent['From'][0]
     zip_ = _extract_valid_zip(body)
-    radius = 100
+    radius = 50
     if zip_:
         subscribe(from_, zip_, radius, msgContent)
         response_sms_body = f"Congrats! You're registered to received notifications for {zip_} + {radius} miles. You're almost ready to #goandgetit"
