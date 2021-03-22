@@ -29,16 +29,35 @@ class Fetcher:
         print(f"{self.source} data updated")
         return pd.DataFrame(data)
     
+class Messager:
+    def __init__(self):
+        self.twilio_client = self._load_twilio_client()
+        self.from_ = "+1 512 488 6383"
+        self.env = 'stage'
+
+    @staticmethod
+    def _load_twilio_client():
+        secrets_client = boto3.session.Session().client(service_name='secretsmanager', region_name="us-east-1")
+        get_secret_value_response = secrets_client.get_secret_value(SecretId='vaccinate-texas')
+        secret = json.loads(get_secret_value_response['SecretString'])
+        client = Client(secret['TWILIO_SID'], secret['TWILIO_SECRET'])
+        return client
+
+    def send_sms(self, to_, body):
+        if self.env == 'dev':
+            print(f"Message sent {self.from_} to {to_} -- ENV=DEV:\n", body)
+            return 
+        msg = self.twilio_client.messages.create(body=body,from_=self.from_,to=to_)
+        resp = f"Message sent {self.from_} to {to_} with locations -- {msg.sid}"
+        print(resp)
 
 class Notifier:
 
-    def __init__(self, source, env = 'dev'):
-        self.env = 'dev'
+    def __init__(self, source, env = 'stage'):
+        self.env = env
         self.source = source
-        self.s3_bucket = boto3.resource('s3').Bucket('data-heb')
         self.current_df, self.prev_df = Fetcher().get_current_prev_dfs()
-        self.twilio_client = self._load_twilio_client()
-        self.from_ = "+1 512 488 6383"
+        self.messager = Messager()
         self.zip_geo_cache = self._load_zip_geo_cache()
         self.subscribers = self.load_subscribers()
         self.geocode_dfs()
@@ -48,22 +67,30 @@ class Notifier:
         self.prev_df['lat_lng'] = self.prev_df.apply(lambda row: f"{row['latitude']},{row['longitude']}", axis=1)
     
     def load_subscribers(self):
-        return pd.read_csv(f"./to_list-{self.env}.csv")
-    
-    @staticmethod
-    def _load_zip_geo_cache():
-        # todo: put this in s3
-        with open('tx_zip_geo_cache.json', 'r') as f:
-            zip_geo_cache = json.load(f)
-        return zip_geo_cache
+        env = 'stage'
+        s3_bucket = boto3.resource('s3').Bucket('vtx-subscriptions')
+        raw_keys = [obj.key for obj in s3_bucket.objects.all() if obj.key.startswith(env)]
+        subscriptions = []
+        for raw_key in raw_keys:
+            try:
+                key = raw_key.split("/")[1]
+                subscriptions.append(
+                    dict(
+                        to_ = key.split("#")[0],
+                        zip_ = key.split("#")[1].split("+")[0],
+                        radius = key.split("#")[1].split("+")[1]
+                    )
+                )
+            except: 
+                print(raw_key)
+
+        return subscriptions
 
     @staticmethod
-    def _load_twilio_client():
-        secrets_client = boto3.session.Session().client(service_name='secretsmanager', region_name="us-east-1")
-        get_secret_value_response = secrets_client.get_secret_value(SecretId='vaccinate-texas')
-        secret = json.loads(get_secret_value_response['SecretString'])
-        client = Client(secret['TWILIO_SID'], secret['TWILIO_SECRET'])
-        return client
+    def _load_zip_geo_cache():
+        s3_bucket = boto3.resource('s3').Bucket('vtx-public')
+        data = json.load(s3_bucket.Object(key='tx_zip_geo_cache.json').get()['Body'])
+        return data
 
     def geocode_zip(self, zip_str):
         zip_str = str(zip_str)
@@ -74,14 +101,14 @@ class Notifier:
             location = geolocator.geocode(zip_str)
             return f"{location.latitude},{location.longitude}"
 
-    def get_filtered_location_updates(self, zip_, radius = 100):
+    def get_filtered_location_updates(self, subscriber):
         old_df, new_df = self.prev_df, self.current_df
         # first filter out locations with 0 appointments
         new_df = new_df[new_df['openAppointmentSlots'] > 1]
         # then filter out locations outside max radius
-        zip_lat_lng = self.geocode_zip(zip_)
+        zip_lat_lng = self.geocode_zip(subscriber['zip_'])
         new_df['miles_away'] = new_df['lat_lng'].apply(lambda location_lat_lng: int(geodesic(location_lat_lng, zip_lat_lng).miles))
-        new_df = new_df[new_df['miles_away'] < radius].sort_values(by='miles_away')
+        new_df = new_df[new_df['miles_away'] < subscriber['radius']].sort_values(by='miles_away')
         # then filter down old_df so we're apples to apples
         old_df = old_df[old_df['name'].isin(new_df['name'])]
         
@@ -98,20 +125,10 @@ class Notifier:
         body.append(f'\nVisit https://vaccine.heb.com/scheduler?q=todo to schedule. #goandgetgetit')
         return '\n'.join(body)
 
-    def send_sms(self, to_, body):
-        if self.env == 'dev':
-            print(f"Message sent {self.from_} to {to_} -- ENV=DEV:\n", body)
-            return 
-    
-        msg = self.twilio_client.messages.create(body=body,from_=self.from_,to=to_)
-        resp = f"Message sent {self.from_} to {to_} with locations -- {msg.sid}"
-        print(resp)
-
     def process_push_notifications(self):
-        for i in range(len(self.subscribers)):
-            person = self.subscribers.loc[i]
-            updates = self.get_filtered_location_updates(person['zip_'], person['radius'])
+        for subscriber in self.subscribers:
+            updates = self.get_filtered_location_updates(subscriber)
             if len(updates) > 0:
                 body = self._generate_body(updates)
-                self.send_sms(person['to_'], body)
-        return i
+                self.messager.send_sms(subscriber['to_'], body)
+        return 'success'
