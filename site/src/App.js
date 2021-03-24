@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
 
 export default class App extends Component {
   constructor(props) {
@@ -14,59 +18,62 @@ export default class App extends Component {
 
   async componentDidMount() { }
 
+  async handleFormInput() { }
+
+  async handleFormSubmit(evt) {
+    evt.preventDefault()
+
+    this.setState({ loading: true })
+
+    // TODO SAVE TO DYNAMO
+
+    // window.location.replace('/')
+  }
+
+
   /**
    * Render
    */
 
   render() {
     return (
-      <div>
+      <div className='container'>
+        <div className='navbar'>
 
-        {/* menu container */}
-        <div className='menuContainer'>
-          <img
-            className='menuLogo'
-            src='https://vtx-public.s3.amazonaws.com/vaccinate_texas.svg'
-            alt='vaccinate-texas-logo'
-          />
-          <div className='menuLinkContainer'>
-
-            <a href='/map' className='menuLink'>Map</a>
-            <a href='/volunteer' className='menuLink'>Volunteer</a>
-            <a href='/about' className='menuLink'>About</a>
-            <a href='https://twitter.com/vaccinatetexas' target='_blank'>
-              {/* <img src={'./twitter-icon.svg'} className='menuIcon' /> */}
-            </a>
-            <a href='https://github.com/parquar/vaccinate-texas-org' target='_blank'>
-              <img
-                src='https://vtx-public.s3.amazonaws.com/github-icon.svg'
-                className='menuIcon'
-              />
-            </a>
-          </div>
         </div>
 
-
-        {/* home container */}
-        <div className="container" id="home">
-          <div className="hero">
-            <img src="https://vtx-public.s3.amazonaws.com/go_and_get_it.svg" />
-          </div>
-
-          <div className="tagline">
-            Text your zip code to +15124886383 to get push notifications
-          </div>
+        <div className='logoContainer'>
+          <img className='mainLogo' src="https://vtx-public.s3.amazonaws.com/go_and_get_it.svg" />
         </div>
 
-        {/* map container */}
-        <div className="containerFull" id="map">
-          <iframe
-            className="iframeContent"
-            src="https://tdem.maps.arcgis.com/apps/webappviewer/index.html?id=3700a84845c5470cb0dc3ddace5c376b"
-          />
+        <div className='formContainer'>
+          <Form className="subscribe-form">
+            <Form.Row className="align-items-centers">
+              <Col xs="auto">
+                <Form.Label htmlFor="inlineFormInput" srOnly>
+                  Name
+                </Form.Label>
+                <Form.Control
+                  className="mb-2"
+                  id="inlineFormInput"
+                  placeholder="+1 (512) 555-5555"
+                />
+              </Col>
+
+              <Col xs="auto">
+                <Button type="submit" className="mb-2" id="goGetIt-btns">
+                  <img
+                    className='btn-logo'
+                    src='https://vtx-public.s3.amazonaws.com/vaccinate_texas.svg'
+                    alt='vaccinate-texas-logo'
+                  />
+                  GO GET IT
+                </Button>
+              </Col>
+            </Form.Row>
+          </Form>
         </div>
 
-        {/* about container */}
       </div >
 
     );

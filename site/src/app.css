@@ -16,14 +16,19 @@ div {
   font-weight: 500;
   font-size: 24px;
   line-height: 20px;
-  color: #ffffff;
+  color: #000000;
   word-wrap: break-word;
   letter-spacing: 0.25px;
 }
 
 html,
 body {
-  background: #000000;
+  background: #ffffff;
+}
+
+#goGetIt-btn {
+  background-color: #203375;
+  border-color: #203375;
 }
 
 .container {
@@ -34,17 +39,39 @@ body {
   padding: 30px 50px 50px 50px;
 }
 
-.containerFull {
-  flex-direction: column;
-  height: 100%;
+.navbar {
   width: 100%;
-  margin: 0;
-  padding: 100px 0;
+  height: 100px;
 }
 
-.iframeContent {
-  height: 600px;
+.logoContainer {
+  height: 60vh;
+  justify-content: center;
 }
+
+.mainLogo {
+  height: 100%;
+}
+
+.formContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%
+}
+
+.subscribe-form {
+  width: 600px;
+  align-self: center;
+}
+
+.btn-logo {
+  height: 25px;
+  margin-right: 10px
+}
+
+
+/* pre-built */
+
 
 .hero {
   align-items: center;
