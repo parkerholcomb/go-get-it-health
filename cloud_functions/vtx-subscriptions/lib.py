@@ -21,5 +21,5 @@ class Messager:
             print(f"Message sent {self.from_} to {to_} -- ENV=DEV:\n", body)
             return 
         msg = self.twilio_client.messages.create(body=body,from_=self.from_,to=to_)
-        resp = f"Message sent {self.from_} to {to_} with locations -- {msg.sid}"
+        resp = f"Message sent {self.from_} to {to_}:\n {body}\n -- {msg.sid}"
         print(resp)
