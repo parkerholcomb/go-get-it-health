@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import Col from 'react-bootstrap/Col';
+import Navbar from 'react-bootstrap/Navbar';
 import { sendPrompt } from './utils/api';
 
 
@@ -53,7 +53,17 @@ export default class App extends Component {
     return (
       <div className='container'>
         <div className='navbar'>
-
+          <Navbar bg="white">
+            <Navbar.Brand href="#home">
+              <img
+                src="https://vtx-public.s3.amazonaws.com/vaccinate_texas.svg"
+                width="100"
+                height="100"
+                className="d-inline-block align-top"
+                alt="vaccinate-texas-logo"
+              />
+            </Navbar.Brand>
+          </Navbar>
         </div>
 
         <div className='logoContainer'>
@@ -61,22 +71,17 @@ export default class App extends Component {
         </div>
 
         <div className='formContainer'>
-            <Form inline className="subscribe-form" onSubmit={this.handleFormSubmit}>
-              <FormControl
-                type="text"
-                placeholder="Mobile Number"
-                className=" mr-sm-2"
-                onChange={(e) => { this.handleFormInput('phone', e.target.value) }}
-              />
-              <Button type="submit" id="goGetIt-btns">
-                <img
-                  className='btn-logo'
-                  src='https://vtx-public.s3.amazonaws.com/vaccinate_texas.svg'
-                  alt='vaccinate-texas-logo'
-                />
+          <Form inline className="subscribe-form" onSubmit={this.handleFormSubmit}>
+            <FormControl
+              type="text"
+              placeholder="Mobile Number"
+              className=" mr-sm-2"
+              onChange={(e) => { this.handleFormInput('phone', e.target.value) }}
+            />
+            <Button type="submit" id="goGetIt-btn">
                   GO GET IT
               </Button>
-            </Form>
+          </Form>
         </div>
 
       </div >
