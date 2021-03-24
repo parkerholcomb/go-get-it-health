@@ -60,13 +60,12 @@ body {
 
 /* NAVBAR */
 
-.vtx-navbar {
-  
-  /* align-items: center;
-  justify-content: flex-end; */
+.menuIcon {
+  width: 18px;
+  margin: 0 20px;
+  filter: opacity(50%);
+  margin-top: 12px;
 }
-
-
 /* pre-built */
 
 

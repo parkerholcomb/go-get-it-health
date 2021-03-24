@@ -64,12 +64,16 @@ export default class App extends Component {
             </Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
-              <Nav style={{alignSelf: 'flex-end'}}>
+              <Nav style={{ alignSelf: 'flex-end' }}>
                 <Nav.Link href="https://tdem.maps.arcgis.com/apps/webappviewer/index.html?id=3700a84845c5470cb0dc3ddace5c376b" target="_blank">MAP</Nav.Link>
                 <Nav.Link href="#todo">ABOUT</Nav.Link>
+                <a href='https://twitter.com/vaccinatetexas' target='_blank'>
+                  <img src={'https://vtx-public.s3.amazonaws.com/twitter.svg'} className='menuIcon' />
+                </a>
+                <a href='https://github.com/parquar/vaccinate-texas-org' target='_blank'>
+                  <img src={'https://vtx-public.s3.amazonaws.com/github.svg'} className='menuIcon' />
+                </a>
               </Nav>
-
-
             </Navbar.Collapse>
           </Navbar>
         </div>
@@ -80,24 +84,24 @@ export default class App extends Component {
 
         <div className='formContainer'>
           <Form inline className="subscribe-form" onSubmit={this.handleFormSubmit}>
-            <div style={{flexDirection: "row"}}>
-              <div style={{border: "1px solid #ced4da", borderRight: "", borderRadius: ".25rem 0 0 .25rem", width: "60px", alignContent:'center'}}>
-                <img 
-                  style={{padding: "15px 10px 10px 10px", height: "50px", filter: "opacity(50%)"}}
-                  src="https://vtx-public.s3.amazonaws.com/comment-alt.svg" 
+            <div style={{ flexDirection: "row" }}>
+              <div style={{ border: "1px solid #ced4da", borderRight: "", borderRadius: ".25rem 0 0 .25rem", width: "60px", alignContent: 'center' }}>
+                <img
+                  style={{ padding: "15px 10px 10px 10px", height: "50px", filter: "opacity(50%)" }}
+                  src="https://vtx-public.s3.amazonaws.com/comment-alt.svg"
                 />
               </div>
 
-              <input 
-                className="form-control" 
-                style={{borderRadius: '0', width: "240px"}}
+              <input
+                className="form-control"
+                style={{ borderRadius: '0', width: "240px" }}
                 placeholder="(512) 555-5555"
                 onChange={(e) => { this.handleFormInput('phone', e.target.value) }}
               />
 
-              <button 
+              <button
                 className="btn"
-                style={{backgroundColor: '#203375', color: 'white', borderRadius: '0 .25rem .25rem 0'}}
+                style={{ backgroundColor: '#203375', color: 'white', borderRadius: '0 .25rem .25rem 0' }}
               >
                 SUBSCRIBE
               </button>
