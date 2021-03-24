@@ -101,7 +101,7 @@ export default class App extends Component {
 
               <button
                 className="btn"
-                style={{ backgroundColor: '#203375', color: 'white', borderRadius: '0 .25rem .25rem 0' }}
+                style={{ backgroundColor: '#203375', color: 'white', borderRadius: '0 .25rem .25rem 0', borderLeft: "" }}
               >
                 SUBSCRIBE
               </button>
