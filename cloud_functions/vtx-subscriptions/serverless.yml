@@ -1,10 +1,9 @@
-service: vtx-heb
+service: vtx-subscriptions
 frameworkVersion: '2'
 
 provider:
   name: aws
   runtime: python3.7
-  timeout: 60
   profile: default
   lambdaHashingVersion: 20201221
   iamRoleStatements:
@@ -18,11 +17,19 @@ provider:
       Resource: '*'
     
 functions:
-  fetch_and_push_heb: 
+  inbound_sms_handler: 
     handler: handler.main
+    events:
+      - httpApi:
+          path: /sms/inbound
+          method: post
     layers:
       - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
-    events: 
-      - schedule: 
-          rate: rate(1 minute)
-  
+  send_prompt_sms: 
+    handler: prompt_handler.main
+    events:
+      - httpApi:
+          path: /sms/prompt
+          method: post
+    layers:
+      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1

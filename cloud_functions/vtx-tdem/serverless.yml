@@ -18,8 +18,8 @@ provider:
       Resource: '*'
     
 functions:
-  fetch_tdem: 
-    handler: fetch_tdem.main
+  fetch_and_push_tdem: 
+    handler: handler.main
     layers:
       - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
     events: 
