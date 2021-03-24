@@ -64,8 +64,8 @@ export default class App extends Component {
             </Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
-              <Nav className="mr-auto vtx-navbar">
-                <Nav.Link href="#todo">MAP</Nav.Link>
+              <Nav style={{alignSelf: 'flex-end'}}>
+                <Nav.Link href="https://tdem.maps.arcgis.com/apps/webappviewer/index.html?id=3700a84845c5470cb0dc3ddace5c376b" target="_blank">MAP</Nav.Link>
                 <Nav.Link href="#todo">ABOUT</Nav.Link>
               </Nav>
 
