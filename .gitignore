@@ -24,5 +24,5 @@ var/
 .serverless
 
 
+.cache**
 site/.cache*
-
