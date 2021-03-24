@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
 import { sendPrompt } from './utils/api';
 
 
@@ -56,13 +57,22 @@ export default class App extends Component {
           <Navbar bg="white">
             <Navbar.Brand href="#home">
               <img
-                src="https://vtx-public.s3.amazonaws.com/vaccinate_texas.svg"
-                width="100"
-                height="100"
+                src="https://vtx-public.s3.amazonaws.com/vaccinate_texas_border.svg"
+                width="70"
+                height="70"
                 className="d-inline-block align-top"
                 alt="vaccinate-texas-logo"
               />
             </Navbar.Brand>
+            <Navbar.Toggle />
+            <Navbar.Collapse className="justify-content-end">
+              <Nav className="mr-auto vtx-navbar">
+                <Nav.Link href="#todo">ABOUT</Nav.Link>
+                <Nav.Link href="#todo">BLOG</Nav.Link>
+              </Nav>
+              
+              
+            </Navbar.Collapse>
           </Navbar>
         </div>
 
@@ -79,7 +89,7 @@ export default class App extends Component {
               onChange={(e) => { this.handleFormInput('phone', e.target.value) }}
             />
             <Button type="submit" id="goGetIt-btn">
-                  GO GET IT
+              GO GET IT
               </Button>
           </Form>
         </div>
