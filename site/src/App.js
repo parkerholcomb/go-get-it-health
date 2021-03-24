@@ -67,8 +67,8 @@ export default class App extends Component {
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
               <Nav className="mr-auto vtx-navbar">
+                <Nav.Link href="#todo">MAP</Nav.Link>
                 <Nav.Link href="#todo">ABOUT</Nav.Link>
-                <Nav.Link href="#todo">BLOG</Nav.Link>
               </Nav>
               
               
