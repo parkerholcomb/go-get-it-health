@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 import Col from 'react-bootstrap/Col';
 import { sendPrompt } from './utils/api';
 
@@ -37,7 +38,7 @@ export default class App extends Component {
 
     console.log(this.state)
 
-    
+
 
     resp = await sendPrompt(this.state['phone'])
     console.log(resp)
@@ -60,32 +61,22 @@ export default class App extends Component {
         </div>
 
         <div className='formContainer'>
-          <Form className="subscribe-form" onSubmit={this.handleFormSubmit}>
-            <Form.Row className="align-items-centers">
-              <Col xs="auto">
-                <Form.Label htmlFor="inlineFormInput" srOnly>
-                  Name
-                </Form.Label>
-                <Form.Control
-                  className="mb-2"
-                  id="inlineFormInput"
-                  placeholder="+1 (512) 555-5555"
-                  onChange={(e) => { this.handleFormInput('phone', e.target.value) }}
+            <Form inline className="subscribe-form" onSubmit={this.handleFormSubmit}>
+              <FormControl
+                type="text"
+                placeholder="Mobile Number"
+                className=" mr-sm-2"
+                onChange={(e) => { this.handleFormInput('phone', e.target.value) }}
+              />
+              <Button type="submit" id="goGetIt-btns">
+                <img
+                  className='btn-logo'
+                  src='https://vtx-public.s3.amazonaws.com/vaccinate_texas.svg'
+                  alt='vaccinate-texas-logo'
                 />
-              </Col>
-
-              <Col xs="auto">
-                <Button type="submit" className="mb-2" id="goGetIt-btns">
-                  <img
-                    className='btn-logo'
-                    src='https://vtx-public.s3.amazonaws.com/vaccinate_texas.svg'
-                    alt='vaccinate-texas-logo'
-                  />
                   GO GET IT
-                </Button>
-              </Col>
-            </Form.Row>
-          </Form>
+              </Button>
+            </Form>
         </div>
 
       </div >
