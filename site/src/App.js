@@ -2,14 +2,17 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
-import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
+import { sendPrompt } from './utils/api';
+
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.state.loading = false;
+    this.state.phone = '';
+
+    this.handleFormInput = this.handleFormInput.bind(this)
+    this.handleFormSubmit = this.handleFormSubmit.bind(this)
   }
 
   /**
@@ -18,16 +21,26 @@ export default class App extends Component {
 
   async componentDidMount() { }
 
-  async handleFormInput() { }
+  handleFormInput(field, value) {
+    value = value.trim()
+
+    const nextState = {}
+    nextState[field] = value
+
+    this.setState(Object.assign(this.state, nextState))
+    // console.log(this.state)
+  }
+
 
   async handleFormSubmit(evt) {
     evt.preventDefault()
 
-    this.setState({ loading: true })
+    console.log(this.state)
 
-    // TODO SAVE TO DYNAMO
+    
 
-    // window.location.replace('/')
+    resp = await sendPrompt(this.state['phone'])
+    console.log(resp)
   }
 
 
@@ -47,7 +60,7 @@ export default class App extends Component {
         </div>
 
         <div className='formContainer'>
-          <Form className="subscribe-form">
+          <Form className="subscribe-form" onSubmit={this.handleFormSubmit}>
             <Form.Row className="align-items-centers">
               <Col xs="auto">
                 <Form.Label htmlFor="inlineFormInput" srOnly>
@@ -57,6 +70,7 @@ export default class App extends Component {
                   className="mb-2"
                   id="inlineFormInput"
                   placeholder="+1 (512) 555-5555"
+                  onChange={(e) => { this.handleFormInput('phone', e.target.value) }}
                 />
               </Col>
 
