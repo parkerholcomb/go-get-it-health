@@ -6,8 +6,6 @@ div {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  height: 100%;
-  width: 100%;
   margin: 0;
   padding: 0;
   line-height: normal;
@@ -26,10 +24,7 @@ body {
   background: #ffffff;
 }
 
-#goGetIt-btn {
-  background-color: #203375;
-  border-color: #203375;
-}
+
 
 .container {
   flex-direction: column;
@@ -53,22 +48,20 @@ body {
   height: 100%;
 }
 
+/* FORM */
+
 .formContainer {
-  display: flex;
-  justify-content: center;
-  width: 100%
+  width: 100%;
 }
 
 .subscribe-form {
   align-self: center;
 }
 
-.btn-logo {
-  height: 25px;
-  margin-right: 10px
-}
+/* NAVBAR */
 
 .vtx-navbar {
+  
   align-items: center;
   justify-content: flex-end;
 }

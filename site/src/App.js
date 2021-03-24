@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { sendPrompt } from './utils/api';
@@ -70,8 +68,8 @@ export default class App extends Component {
                 <Nav.Link href="#todo">MAP</Nav.Link>
                 <Nav.Link href="#todo">ABOUT</Nav.Link>
               </Nav>
-              
-              
+
+
             </Navbar.Collapse>
           </Navbar>
         </div>
@@ -82,15 +80,30 @@ export default class App extends Component {
 
         <div className='formContainer'>
           <Form inline className="subscribe-form" onSubmit={this.handleFormSubmit}>
-            <FormControl
-              type="text"
-              placeholder="Mobile Number"
-              className=" mr-sm-2"
-              onChange={(e) => { this.handleFormInput('phone', e.target.value) }}
-            />
-            <Button type="submit" id="goGetIt-btn">
-              GO GET IT
-              </Button>
+            <div style={{flexDirection: "row"}}>
+              <div style={{border: "1px solid #ced4da", borderRight: "", borderRadius: ".25rem 0 0 .25rem", width: "60px", alignContent:'center'}}>
+                <img 
+                  style={{padding: "15px 10px 10px 10px", height: "50px", filter: "opacity(50%)"}}
+                  src="https://vtx-public.s3.amazonaws.com/comment-alt.svg" 
+                />
+              </div>
+
+              <input 
+                className="form-control" 
+                style={{borderRadius: '0', width: "240px"}}
+                placeholder="(512) 555-5555"
+                onChange={(e) => { this.handleFormInput('phone', e.target.value) }}
+              />
+
+              <button 
+                className="btn"
+                style={{backgroundColor: '#203375', color: 'white', borderRadius: '0 .25rem .25rem 0'}}
+              >
+                SUBSCRIBE
+              </button>
+
+            </div>
+
           </Form>
         </div>
 
