@@ -10,6 +10,7 @@ export default class App extends Component {
     super(props);
     this.state = {};
     this.state.phone = '';
+    this.state.notification = '';
 
     this.handleFormInput = this.handleFormInput.bind(this)
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
@@ -31,16 +32,21 @@ export default class App extends Component {
     // console.log(this.state)
   }
 
-
   async handleFormSubmit(evt) {
     evt.preventDefault()
 
     console.log(this.state)
 
-
-
     resp = await sendPrompt(this.state['phone'])
     console.log(resp)
+
+    const phone = this.state['phone']
+    const nextState = {
+      "phone":"", 
+      "notification": `SMS sent to ${phone}`
+    }
+    this.setState(Object.assign(this.state, nextState))
+    console.log(this.state)
   }
 
 
@@ -58,15 +64,15 @@ export default class App extends Component {
                 src="https://vtx-public.s3.amazonaws.com/vaccinate_texas_border.svg"
                 width="70"
                 height="70"
-                className="d-inline-block align-top"
+                className="brand-img"
                 alt="vaccinate-texas-logo"
               />
             </Navbar.Brand>
             <Navbar.Toggle />
-            <Navbar.Collapse className="justify-content-end">
+            <Navbar.Collapse>
               <Nav style={{ alignSelf: 'flex-end' }}>
                 <Nav.Link href="https://tdem.maps.arcgis.com/apps/webappviewer/index.html?id=3700a84845c5470cb0dc3ddace5c376b" target="_blank">MAP</Nav.Link>
-                <Nav.Link href="#todo">ABOUT</Nav.Link>
+                <Nav.Link href='https://github.com/parquar/vaccinate-texas-org' target='_blank'>ABOUT</Nav.Link>
                 <a href='https://twitter.com/vaccinatetexas' target='_blank'>
                   <img src={'https://vtx-public.s3.amazonaws.com/twitter.svg'} className='menuIcon' />
                 </a>
@@ -82,6 +88,9 @@ export default class App extends Component {
           <img className='mainLogo' src="https://vtx-public.s3.amazonaws.com/go_and_get_it.svg" />
         </div>
 
+        <div className='notification-container'>
+          {this.state.notification}
+        </div>
         <div className='formContainer'>
           <Form inline className="subscribe-form" onSubmit={this.handleFormSubmit}>
             <div style={{ flexDirection: "row" }}>
@@ -94,7 +103,9 @@ export default class App extends Component {
 
               <input
                 className="form-control"
-                style={{ borderRadius: '0', width: "240px" }}
+                style={{ borderRadius: '0', maxWidth: "240px", height: "auto" }}
+                value={this.state.phone}
+                type="tel"
                 placeholder="(512) 555-5555"
                 onChange={(e) => { this.handleFormInput('phone', e.target.value) }}
               />
@@ -103,7 +114,7 @@ export default class App extends Component {
                 className="btn"
                 style={{ backgroundColor: '#203375', color: 'white', borderRadius: '0 .25rem .25rem 0', borderLeft: "" }}
               >
-                SUBSCRIBE
+                REGISTER
               </button>
 
             </div>
