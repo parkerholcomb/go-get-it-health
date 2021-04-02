@@ -16,15 +16,25 @@ def _extract_valid_zip(body):
     data = json.load(s3_bucket.Object(key='tx_zip_geo_cache.json').get()['Body'])
     valid_zips = data.keys()
     tokens = body.split(" ")
-    print("tokens:\n", tokens)
+    print("tokens:", tokens)
     for token in tokens:
         if token in valid_zips:
             print(token)
             return token
     return None
 
+def _get_env(twilio_number):
+    print("twilio_number: ", twilio_number)
+    if twilio_number == "+15124899353":
+        return "dev"
+    elif twilio_number == "+15124886383":
+        return "stage"
+    elif twilio_number == "todo":
+        return "prod"
+
 def subscribe(to_, zip_, radius, msgContent):
-    env = "stage"
+    env = _get_env(msgContent['To'][0])
+    print("env: ", env)
     data = dict(
         to_ = to_,
         zip_ = zip_,
@@ -42,7 +52,7 @@ def main(event, context):
     # print("event:", event)
     # print("context:", context)
     msgContent = _parse_inbound_msg(event)
-    # print("msgContent", msgContent)
+    print("msgContent", msgContent)
     body = msgContent['Body'][0]
     from_ = msgContent['From'][0]
     zip_ = _extract_valid_zip(body)
