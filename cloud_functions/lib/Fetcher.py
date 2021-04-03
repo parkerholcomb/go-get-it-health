@@ -10,7 +10,7 @@ class Fetcher:
         if source == 'heb':
             self.fetch_heb()
         elif source == 'tdem':
-            self.fetch_heb()
+            self.fetch_tdem()
     
     now_partition_str = f"{datetime.now().strftime('%Y-%m-%d')}/{datetime.now().strftime('%H:%M')}"
 

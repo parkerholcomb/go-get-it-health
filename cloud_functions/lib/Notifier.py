@@ -7,11 +7,12 @@ class Notifier:
 
     def __init__(self, source = 'tdem', env = 'dev'):
         self.env = env
+        print(f"Running notifier. ENV: {self.env}")
         self.source = source
         self.updates_df = TdemLoader().updates_df
         print(f"There are {len(self.updates_df)} locations in TX with positive vaccine delta")
         self.subscribers = Subscriber(self.env).load_subscribers()
-        self.messager = Messager()
+        self.messager = Messager(self.env)
     
     @staticmethod
     def _miles_away(lat_lng_a, lat_lng_b):
@@ -31,11 +32,13 @@ class Notifier:
         return df
 
     def _generate_body(self, df):
-        body = [f"Update from {self.source}"]
+        body = []
         for idx in df.index:
             body.append(f"💉 {df.loc[idx]['name']} has {df.loc[idx]['vaccines_delta']} new vaccines available, {df.loc[idx]['miles_away']} miles away")
         zip_ =  df['zip_'][0] # passing the zip of the first record to center the map on that location
         body.append(f"\nVisit https://www.vaccinatetexas.org/map?={zip_} for more information #goandgetgetit")
+        if self.env != 'prod':
+            body.append(f"Source: {self.source}")
         return '\n'.join(body)
 
     def process_push_notifications(self):
