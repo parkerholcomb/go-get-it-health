@@ -4,7 +4,6 @@ frameworkVersion: '2'
 provider:
   name: aws
   runtime: python3.7
-  timeout: 600 
   profile: default
   lambdaHashingVersion: 20201221
   iamRoleStatements:
@@ -20,6 +19,7 @@ provider:
 functions:
   notifier_tdem: 
     handler: notifier_tdem.main
+    timeout: 600 
     layers:
       - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
     events: 

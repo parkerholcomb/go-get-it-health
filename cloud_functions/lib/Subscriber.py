@@ -1,7 +1,7 @@
 import boto3
 import json
 import time
-from GeoZipCache import GeoZipCache
+from .GeoZipCache import GeoZipCache
 
 class Subscriber:
 
@@ -10,10 +10,15 @@ class Subscriber:
     def __init__(self, env = 'stage'):
         self.env = env
 
+    def _get_radius(self, key):
+        if self.env == 'dev':
+            return 200
+        else: 
+            return int(key.split("+")[-1])
 
     def load_subscribers(self):
         s3_bucket = boto3.resource('s3').Bucket('vtx-subscriptions')
-        raw_keys = [obj.key for obj in s3_bucket.objects.all() if obj.key.startswith(self.env)]
+        raw_keys = [obj.key for obj in s3_bucket.objects.all() if obj.key.startswith(f"{self.env}/+")]
         subscriptions = []
         geo_zip_cache = GeoZipCache()
         for raw_key in raw_keys:
@@ -26,7 +31,7 @@ class Subscriber:
                         phone = phone,
                         zip_ = zip_,
                         lat_lng = geo_zip_cache.geocode_zip(zip_),        
-                        radius = 200 #int(key.split("#")[1].split("+")[1])
+                        radius = self._get_radius(key)
                     )
                 )
             except: 

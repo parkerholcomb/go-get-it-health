@@ -1,6 +1,7 @@
 import boto3
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
+import json
 
 class GeoZipCache:
     def __init__(self):
@@ -27,7 +28,7 @@ class GeoZipCache:
     @staticmethod
     def _load_zip_geo_cache():
         s3_bucket = boto3.resource('s3').Bucket('vtx-public')
-        data = eval(s3_bucket.Object(key='tx_zip_geo_cache.json').get()['Body'])
+        data = json.load(s3_bucket.Object(key='tx_zip_geo_cache.json').get()['Body'])
         return data
 
     def geocode_zip(self, zip_str):

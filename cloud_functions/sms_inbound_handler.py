@@ -17,9 +17,13 @@ def main(event, context):
     else: 
         response_sms_body = f"Hmmm. Doesn't look like you gave us a valid TX zip code. Please reply with your 5 digit zip code to subscribe."
 
+    print(response_sms_body)
     response = {
         "statusCode": 200,
         "body": response_sms_body
     }
 
     return response
+
+if __name__ == "__main__":
+    main("","")

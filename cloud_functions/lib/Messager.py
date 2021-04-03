@@ -3,7 +3,6 @@ import boto3
 import base64
 from urllib import parse
 
-
 class Messager:
 
     twilio_numbers = {
@@ -18,7 +17,7 @@ class Messager:
         self.from_ = self.twilio_numbers[env]
     
     def get_env(self, twilio_number):
-        for env, number in self.twilio_numbers:
+        for env, number in self.twilio_numbers.items():
             if twilio_number == number:
                 return env
 
