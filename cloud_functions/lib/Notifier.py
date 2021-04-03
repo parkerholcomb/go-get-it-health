@@ -1,7 +1,7 @@
 from geopy.distance import geodesic
-from Messager import Messager
-from Subscriber import Subscriber
-from Loader import TdemLoader
+from .Messager import Messager
+from .Subscriber import Subscriber
+from .Loader import TdemLoader
 
 class Notifier:
 

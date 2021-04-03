@@ -1,6 +1,6 @@
 import boto3
 import pandas as pd
-from GeoZipCache import GeoZipCache
+from .GeoZipCache import GeoZipCache
 
 class Loader:
     def __init__(self, source):
@@ -41,6 +41,7 @@ class TdemLoader(Loader):
         df = pd.merge(self.prev_df, self.current_df, on=['NAME','TYPE','ZIP'], how='outer')
         df = df.fillna(0)
         df['vaccines_delta'] = df['VACCINES_AVAILABLE_y'] - df['VACCINES_AVAILABLE_x']
+        df['vaccines_delta'] = df['vaccines_delta'].astype(int)
         return df
 
     def _geocode_changeset(self):
