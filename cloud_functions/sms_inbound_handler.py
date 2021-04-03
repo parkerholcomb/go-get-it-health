@@ -15,7 +15,7 @@ def main(event, context):
         subscriber.add_subscriber(msgContent['From'][0], zip_, msgContent)
         response_sms_body = f"Congrats! You're registered to received notifications for {zip_} + {subscriber.default_radius} miles. You're almost ready to #goandgetit"
     else: 
-        response_sms_body = f"Hmmm. Doesn't look like you gave us a valid TX zip code. Please reply with your 5 digit zip code to subscribe."
+        response_sms_body = f"Reply with your 5 digit TX zip code to get notified when vaccines become available in your area."
 
     print(response_sms_body)
     response = {
