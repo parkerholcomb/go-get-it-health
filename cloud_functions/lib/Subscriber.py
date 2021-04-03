@@ -11,7 +11,7 @@ class Subscriber:
         self.env = env
 
     def _get_radius(self, key):
-        if self.env == 'dev':
+        if self.env in ['dev', 'stage']:
             return 200
         else: 
             return int(key.split("+")[-1])
