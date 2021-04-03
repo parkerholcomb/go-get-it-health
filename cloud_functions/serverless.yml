@@ -25,6 +25,13 @@ functions:
     events: 
       - schedule: 
           rate: rate(10 minutes)
+  notifier_heb: 
+    handler: notifier_heb.main
+    layers:
+      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
+    events: 
+      - schedule: 
+          rate: rate(10 minutes)
   sms_inbound_handler: 
     handler: sms_inbound_handler.main
     events:
