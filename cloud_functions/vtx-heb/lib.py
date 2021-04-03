@@ -21,7 +21,7 @@ class Fetcher:
         current_df = pd.read_json(f"s3://data-heb/{raw_keys[-1]}")
         return [prev_df, current_df]
 
-    def fetch_latest(self):
+    def fetch_heb(self):
         response = requests.get('https://heb-ecom-covid-vaccine.hebdigital-prd.com/vaccine_locations.json')
         data = response.json()['locations']
         self.s3_bucket.Object(key=f"raw/{datetime.now().strftime('%Y-%m-%d')}/{datetime.now().strftime('%H:%M')}/{self.source}-vaccine-supply.json").put(Body=json.dumps(data))

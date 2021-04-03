@@ -1,5 +1,5 @@
 import json
-from lib import Messager
+from lib.Messager import Messager
 
 def main(event, context):
     print("event:\n", event)

@@ -1,0 +1,43 @@
+service: vaccinate-texas
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.7
+  timeout: 600 
+  profile: default
+  lambdaHashingVersion: 20201221
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - s3:*
+      Resource: '*'
+    - Effect: "Allow"
+      Action:
+        - secretsmanager:*
+      Resource: '*'
+    
+functions:
+  notifier_tdem: 
+    handler: notifier_tdem.main
+    layers:
+      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
+    events: 
+      - schedule: 
+          rate: rate(10 minutes)
+  sms_inbound_handler: 
+    handler: sms_inbound_handler.main
+    events:
+      - httpApi:
+          path: /sms/inbound
+          method: post
+    layers:
+      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
+  sms_send_prompt: 
+    handler: sms_prompt_handler.main
+    events:
+      - httpApi:
+          path: /sms/prompt
+          method: post
+    layers:
+      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
