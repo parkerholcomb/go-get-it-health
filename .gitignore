@@ -11,7 +11,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/
 lib64/
 parts/
 sdist/
@@ -22,3 +22,7 @@ var/
 .DS_Store
 # Serverless directories
 .serverless
+
+
+.cache**
+site/.cache*

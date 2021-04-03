@@ -1,0 +1,10 @@
+app: vaccinate-texas
+name: vtx-website
+component: website
+
+inputs:
+  src:
+    src: ./src
+    hook: npm run build
+    dist: ./dist
+  domain: vaccinatetexas.org
