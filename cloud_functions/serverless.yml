@@ -1,9 +1,10 @@
-service: vtx-subscriptions
+service: vaccinate-texas
 frameworkVersion: '2'
 
 provider:
   name: aws
   runtime: python3.7
+  timeout: 600 
   profile: default
   lambdaHashingVersion: 20201221
   iamRoleStatements:
@@ -17,16 +18,23 @@ provider:
       Resource: '*'
     
 functions:
-  inbound_sms_handler: 
-    handler: handler.main
+  notifier_tdem: 
+    handler: notifier_tdem.main
+    layers:
+      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
+    events: 
+      - schedule: 
+          rate: rate(10 minutes)
+  sms_inbound_handler: 
+    handler: sms_inbound_handler.main
     events:
       - httpApi:
           path: /sms/inbound
           method: post
     layers:
       - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
-  send_prompt_sms: 
-    handler: prompt_handler.main
+  sms_send_prompt: 
+    handler: sms_prompt_handler.main
     events:
       - httpApi:
           path: /sms/prompt
