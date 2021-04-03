@@ -5,7 +5,7 @@ from lib.GeoZipCache import GeoZipCache
 def main(event, context):
     # print("event:", event)
     # print("context:", context)
-    msgContent = Messager.parse_inbound_msg(event)
+    msgContent = Messager().parse_inbound_msg(event)
     print("msgContent", msgContent)
     body = msgContent['Body'][0]
     zip_ = GeoZipCache().extract_valid_zip(body)
