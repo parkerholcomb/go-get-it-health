@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import { sendPrompt } from './utils/api';
-
+import axios from 'axios'
 
 export default class App extends Component {
   constructor(props) {
@@ -37,8 +36,9 @@ export default class App extends Component {
 
     console.log(this.state)
 
-    resp = await sendPrompt(this.state['phone'])
-    console.log(resp)
+    const results = await axios.post('https://p6ccqa7dik.execute-api.us-east-1.amazonaws.com/dev/sms/prompt', {
+      phone: this.state['phone'],
+    });
 
     const phone = this.state['phone']
     const nextState = {
