@@ -43,8 +43,9 @@ functions:
   sms_send_prompt: 
     handler: sms_prompt_handler.main
     events:
-      - httpApi:
+      - http:
           path: /sms/prompt
           method: post
+          cors: true
     layers:
       - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1

@@ -11,6 +11,10 @@ def main(event, context):
 
     response = {
         "statusCode": 200,
+        "headers": {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': True,
+        },
         "body": f"prompt message sent to {to_} for env: {env}"
     }
 

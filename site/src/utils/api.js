@@ -1,7 +1,5 @@
-
-
 export const sendPrompt = async (phone) => {
-    resp = await requestApi('/sms/prompt', 'POST', { 'phone': phone })
+    const resp = await requestApi('/sms/prompt', 'POST', { 'phone': phone })
     console.log(resp)
     return resp
 }
