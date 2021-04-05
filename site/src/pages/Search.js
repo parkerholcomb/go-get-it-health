@@ -8,7 +8,11 @@ import Datatable from '../fragments/Datatable';
 
 function Search() {
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState({
+        'locations': [],
+        'location_stats': {}, 
+        'vax_stats': {}, 
+    });
     
 
     const params = {
@@ -18,9 +22,12 @@ function Search() {
 
     const apiBase = 'https://p6ccqa7dik.execute-api.us-east-1.amazonaws.com/dev'
     const searchEndpoint = `${apiBase}/search`
-    
+
     useEffect(() => {
-        fetch(searchEndpoint, params)
+        fetch(searchEndpoint, {
+            method: 'POST',
+            body: JSON.stringify(params)
+        })
         .then(response => response.json())
         .then((json) => setData(json))
     }, []);
@@ -30,7 +37,7 @@ function Search() {
         <div className='container'>
             <Nav/>
             <div className='main'>
-                <Datatable data={data}/>
+                <Datatable data={data.locations}/>
             </div>
         </div>
     );
