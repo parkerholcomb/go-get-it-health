@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import {withRouter} from 'react-router-dom'
+import { withRouter, useLocation } from 'react-router-dom'
 import Nav from '../fragments/Nav'
 import Datatable from '../fragments/Datatable';
 import AvailabilitySummary from '../fragments/AvailabilitySummary';
 import PromptForm from '../fragments/PromptForm';
-
+import queryString from 'query-string'
 
 function Search() {
+    const { search } = useLocation() 
+    const { zip, radius } = queryString.parse(search)
+    const paramRadius = radius ? parseInt(radius) : 50
+    const paramZip = zip ? zip : '78741' // remove this once form is in
 
+    const [params, setParams] = useState({
+        'zip_': paramZip,
+        'radius': paramRadius
+    });
+    
     const [data, setData] = useState({
         'locations': [],
         'location_stats': [], 
         'vax_stats': {}, 
     });
-    
-    const [params, setParams] = useState({
-        'zip_': '78741',
-        'radius': 50
-    });
-    
+
     const apiBase = 'https://p6ccqa7dik.execute-api.us-east-1.amazonaws.com/dev'
     const searchEndpoint = `${apiBase}/search`
 
@@ -43,7 +47,7 @@ function Search() {
                 <div style={{height: '40vh', overflow: 'scroll'}}>
                     <Datatable data={data.locations}/>
                 </div>
-                <PromptForm/>
+                {/* <PromptForm/> */}
             </div>
         </div>
     );
