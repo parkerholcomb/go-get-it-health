@@ -1,21 +1,26 @@
-import React, { Component, useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import {withRouter} from 'react-router-dom'
+import axios from 'axios'
 import Nav from '../fragments/Nav'
 import Datatable from '../fragments/Datatable';
 
-require("axios");
 
-class Search extends Component {
 
-    
+function Search() {
+
     const [data, setData] = useState([]);
-    // const [params, setParams] = useState({
-    //     zip_: "78741",
-    //     radius: 10
+    
 
-    // })
+    const params = {
+        'zip_': '78741',
+        'radius': 100
+    }
+
+    const apiBase = 'https://p6ccqa7dik.execute-api.us-east-1.amazonaws.com/dev'
+    const searchEndpoint = `${apiBase}/search`
+    
     useEffect(() => {
-        fetch()
+        fetch(searchEndpoint, params)
         .then(response => response.json())
         .then((json) => setData(json))
     }, []);
@@ -26,7 +31,6 @@ class Search extends Component {
             <Nav/>
             <div className='main'>
                 <Datatable data={data}/>
-
             </div>
         </div>
     );

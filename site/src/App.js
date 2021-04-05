@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 import Home from './pages/Home'
 import About from './pages/About'
+import Search from './pages/Search'
 
 export default class App extends Component {
 
@@ -29,6 +30,10 @@ export default class App extends Component {
 
           <Route path='/about'>
             <About />
+          </Route>
+
+          <Route path='/q'>
+            <Search />
           </Route>
 
         </Switch>

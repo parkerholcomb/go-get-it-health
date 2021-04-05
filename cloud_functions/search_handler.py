@@ -53,11 +53,11 @@ def main(event, context):
 
     df = df.head()
 
-    data = {
-        "byLocationType": _location_type_stats(df),
-        "byVaccineType": _vaccine_type_stats(df)
+    # data = {
+    #     "byLocationType": _location_type_stats(df),
+    #     "byVaccineType": _vaccine_type_stats(df)
         
-    }
+    # }
 
     response = {
         "statusCode": 200,
