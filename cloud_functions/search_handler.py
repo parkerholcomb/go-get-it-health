@@ -15,19 +15,19 @@ def _miles_away(lat_lng_a, lat_lng_b):
 def _vaccine_stats(df):
     return dict(
         locations_count = int(df['NAME'].count()),
-        total_available = int(df['VACCINES_AVAILABLE'].sum()),
         pfizer_available = int(df['PFIZER_AVAILABLE'].sum()),
         moderna_available = int(df['MODERNA_AVAILABLE'].sum()),
-        jj_available = int(df['JJ_AVAILABLE'].sum())
+        jj_available = int(df['JJ_AVAILABLE'].sum()),
+        total_available = int(df['VACCINES_AVAILABLE'].sum())
     )
 
 def _location_stats(df):
     stats = df.groupby(['TYPE']).agg(
         locations_count=('NAME','count'), 
-        total_available=('VACCINES_AVAILABLE','sum'),
         pfizer_available=('PFIZER_AVAILABLE','sum'),
         moderna_available=('MODERNA_AVAILABLE','sum'),
-        jj_available=('JJ_AVAILABLE','sum')
+        jj_available=('JJ_AVAILABLE','sum'),
+        total_available=('VACCINES_AVAILABLE','sum')
     ).reset_index()
 
     return stats.to_dict(orient='records')
