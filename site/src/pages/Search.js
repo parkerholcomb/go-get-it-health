@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import {withRouter} from 'react-router-dom'
-import axios from 'axios'
 import Nav from '../fragments/Nav'
 import Datatable from '../fragments/Datatable';
-
+import AvailabilitySummary from '../fragments/AvailabilitySummary';
+import PromptForm from '../fragments/PromptForm';
 
 
 function Search() {
 
     const [data, setData] = useState({
         'locations': [],
-        'location_stats': {}, 
+        'location_stats': [], 
         'vax_stats': {}, 
     });
     
-
-    const params = {
+    const [params, setParams] = useState({
         'zip_': '78741',
-        'radius': 100
-    }
-
+        'radius': 50
+    });
+    
     const apiBase = 'https://p6ccqa7dik.execute-api.us-east-1.amazonaws.com/dev'
     const searchEndpoint = `${apiBase}/search`
 
@@ -37,7 +36,14 @@ function Search() {
         <div className='container'>
             <Nav/>
             <div className='main'>
-                <Datatable data={data.locations}/>
+               <h6>Availability Summary for {params.zip_} + {params.radius} miles:</h6>
+                <AvailabilitySummary className='card' data={data.vax_stats}/>
+                {/* <Datatable data={data.location_stats}/> */}
+                {/* <h6>Locations:</h6> */}
+                <div style={{height: '40vh', overflow: 'scroll'}}>
+                    <Datatable data={data.locations}/>
+                </div>
+                <PromptForm/>
             </div>
         </div>
     );
