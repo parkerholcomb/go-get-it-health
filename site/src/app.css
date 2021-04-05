@@ -30,6 +30,10 @@ body {
   padding: 30px 50px 50px 50px;
 }
 
+.main {
+  height: 60vh;
+  justify-content: center;
+}
 
 
 .logoContainer {
