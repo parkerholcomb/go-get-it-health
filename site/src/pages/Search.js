@@ -40,7 +40,7 @@ function Search() {
         <div className='container'>
             <Nav/>
             <div className='main'>
-               <h6>Availability Summary for {params.zip_} + {params.radius} miles:</h6>
+               <h5 style={{alignSelf: 'center'}}>Vaccines Available within {params.radius} miles of {params.zip_}</h5>
                 <AvailabilitySummary className='card' data={data.vax_stats}/>
                 {/* <Datatable data={data.location_stats}/> */}
                 {/* <h6>Locations:</h6> */}
