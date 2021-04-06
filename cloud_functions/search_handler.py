@@ -47,7 +47,7 @@ def main(event, context):
     df = df[df['miles_away'] < params['radius']]
     df = df.sort_values(by='miles_away').reset_index(drop=True)
     
-    selected_fields = ['NAME','TYPE','VACCINES_AVAILABLE','PFIZER_AVAILABLE','MODERNA_AVAILABLE','JJ_AVAILABLE', 'miles_away']
+    selected_fields = ['NAME','TYPE','VACCINES_AVAILABLE','PFIZER_AVAILABLE','MODERNA_AVAILABLE','JJ_AVAILABLE', 'miles_away', 'lat_lng']
     dft = df[selected_fields]
     dft = dft.rename(columns={'PFIZER_AVAILABLE':'pfizer','MODERNA_AVAILABLE':'moderna','JJ_AVAILABLE':'jj','VACCINES_AVAILABLE':'total','TYPE':'type'})
     print(dft)
