@@ -42,6 +42,7 @@ td, th {
 .navbar {
   width: 100%;
   height: 100px;
+  margin-bottom: 50px;
 }
 
 .main {
@@ -66,7 +67,10 @@ td, th {
 
 .mainLogo {
   height: 100%;
+  animation-duration: 2000ms;
+  animation-name: fadeIn;
 }
+
 
 /* FORM */
 
@@ -131,6 +135,32 @@ td, th {
   align-items: center;
   margin-bottom: 10px;
   color: #D63432
+}
+
+.hero {
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  min-height: 30vh;
+  animation-duration: 2000ms;
+  animation-name: fadeIn;
+}
+
+.hero img {
+  max-width: 80%;
+  pointer-events: none;
+}
+
+.tagline {
+  align-items: center;
+  height: auto;
+  margin-top: 40px;
+  text-align: center;
+  opacity: 0;
+  animation-fill-mode: forwards;
+  animation-delay: 500ms;
+  animation-duration: 2000ms;
+  animation-name: fadeIn;
 }
 
 
