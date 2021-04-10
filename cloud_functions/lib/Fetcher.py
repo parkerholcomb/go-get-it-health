@@ -3,13 +3,15 @@ import json
 from datetime import datetime
 import requests
 import pandas as pd
+import os
 
 class Fetcher:
 
     def __init__(self, source):
+        self.env = os.environ.get('DEPLOY_STAGE')
         if source == 'heb':
             self.fetch_heb()
-        elif source == 'tdem':
+        elif (source == 'tdem') and (self.env == 'prod'):
             self.fetch_tdem()
     
     now_partition_str = f"{datetime.now().strftime('%Y-%m-%d')}/{datetime.now().strftime('%H:%M')}"

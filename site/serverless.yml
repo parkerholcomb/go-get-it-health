@@ -1,5 +1,5 @@
 app: go-get-it
-name: go-get-it-web
+name: go-get-it
 component: website
 
 inputs:
