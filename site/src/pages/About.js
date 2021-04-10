@@ -9,7 +9,7 @@ class About extends Component {
             <div className='container'>
                 <Nav/>
                 <div className='logoContainer'>
-                    Test
+                    todo
                 </div>
                 <PromptForm/>
             </div>

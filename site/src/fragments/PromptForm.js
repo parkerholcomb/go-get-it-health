@@ -32,7 +32,8 @@ export default class PromptForm extends Component {
 
         console.log(this.state)
 
-        const promptEndpoint = 'https://p6ccqa7dik.execute-api.us-east-1.amazonaws.com/dev/sms/prompt'
+        const apiBase = "https://b1n1kqglok.execute-api.us-east-1.amazonaws.com/prod" // todo: set this in process.env
+        const promptEndpoint = `${apiBase}/sms/prompt`
 
         const results = await axios.post(promptEndpoint, {
             phone: this.state['phone'],

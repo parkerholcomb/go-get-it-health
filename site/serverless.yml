@@ -1,5 +1,5 @@
-app: vaccinate-texas
-name: vtx-website
+app: go-get-it
+name: go-get-it-web
 component: website
 
 inputs:
@@ -7,4 +7,4 @@ inputs:
     src: ./src
     hook: npm run build
     dist: ./dist
-  domain: vaccinatetexas.org
+  domain: gogetit.health
