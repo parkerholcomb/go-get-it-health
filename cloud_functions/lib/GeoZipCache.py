@@ -16,18 +16,9 @@ class GeoZipCache:
                 print(token)
                 return token
         
-    # def miles_away(self, zip_a, zip_b):
-    #     lat_lng_a, lat_lng_b = self.geocode_zip(zip_a), self.geocode_zip(zip_b)
-    #     try:
-    #         return int(geodesic(lat_lng_a, lat_lng_b).miles)
-    #     except:
-    #         # todo tighten this up
-    #         print(f"geocoding failed for {zip_a}, {zip_b}")
-    #         return 9999
-    
     @staticmethod
     def _load_zip_geo_cache():
-        s3_bucket = boto3.resource('s3').Bucket('vtx-public')
+        s3_bucket = boto3.resource('s3').Bucket('ggi-geo')
         data = json.load(s3_bucket.Object(key='tx_zip_geo_cache.json').get()['Body'])
         return data
 

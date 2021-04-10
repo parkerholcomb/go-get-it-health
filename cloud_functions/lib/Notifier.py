@@ -2,17 +2,18 @@ from geopy.distance import geodesic
 from .Messager import Messager
 from .Subscriber import Subscriber
 from .Loader import TdemLoader
+import os
 
 class Notifier:
 
-    def __init__(self, source = 'tdem', env = 'dev'):
-        self.env = env
+    def __init__(self, source = 'tdem'):
+        self.env = os.environ.get('DEPLOY_STAGE')
         print(f"Running notifier. ENV: {self.env}")
         self.source = source
         self.updates_df = TdemLoader().updates_df
         print(f"There are {len(self.updates_df)} locations in TX with positive vaccine delta")
-        self.subscribers = Subscriber(self.env).load_subscribers()
-        self.messager = Messager(self.env)
+        self.subscribers = Subscriber().load_subscribers()
+        self.messager = Messager()
     
     @staticmethod
     def _miles_away(lat_lng_a, lat_lng_b):
@@ -36,7 +37,7 @@ class Notifier:
         for idx in df.index:
             body.append(f"💉 {df.loc[idx]['name']} has {df.loc[idx]['vaccines_delta']} new vaccines available, {df.loc[idx]['miles_away']} miles away")
         zip_ =  df['zip_'][0] # passing the zip of the first record to center the map on that location
-        body.append(f"\nVisit vaccinatetexas.org/q?zip={zip_} for more information #goandgetgetit")
+        body.append(f"\nVisit gogetit.health/q?zip={zip_} for more information #goandgetgetit")
         if self.env != 'prod':
             body.append(f"Source: {self.source}")
         return '\n'.join(body)

@@ -5,7 +5,8 @@ from .GeoZipCache import GeoZipCache
 class Loader:
     def __init__(self, source):
         self.source = source
-        self.s3_bucket = boto3.resource('s3').Bucket(f'data-{source}')
+        self.bucket_prefix = f"s3://ggi-data-{self.source}"
+        self.s3_bucket = boto3.resource('s3').Bucket(f'ggi-data-{source}')
         self.prev_df, self.current_df = self.get_current_prev_dfs()
 
     @staticmethod
@@ -19,11 +20,11 @@ class Loader:
         raw_keys = [obj.key for obj in self.s3_bucket.objects.all() if (obj.key.startswith('raw') and not obj.key.startswith('raw/latest'))]
         if self._get_filetype(raw_keys[-1]) == 'csv':
             # stored as csv (vs heb is in json)
-            prev_df = pd.read_csv(f"s3://data-{self.source}/{raw_keys[-2]}")
-            current_df = pd.read_csv(f"s3://data-{self.source}/{raw_keys[-1]}")
+            prev_df = pd.read_csv(f"{self.bucket_prefix}/{raw_keys[-2]}")
+            current_df = pd.read_csv(f"{self.bucket_prefix}/{raw_keys[-1]}")
         else: 
-            prev_df = pd.read_json(f"s3://data-{self.source}/{raw_keys[-2]}")
-            current_df = pd.read_json(f"s3://data-{self.source}/{raw_keys[-1]}")
+            prev_df = pd.read_json(f"{self.bucket_prefix}/{raw_keys[-2]}")
+            current_df = pd.read_json(f"{self.bucket_prefix}/{raw_keys[-1]}")
         return [prev_df, current_df]
 
 
