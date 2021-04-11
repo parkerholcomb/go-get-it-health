@@ -8,7 +8,7 @@ export default class PromptForm extends Component {
         super(props);
         this.state = {};
         this.state.phone = '';
-        this.state.notification = 'Updates when vaccines become avaiable in your area.';
+        this.state.notification = 'Updates when vaccines become available in your area.';
 
         this.handleFormInput = this.handleFormInput.bind(this)
         this.handleFormSubmit = this.handleFormSubmit.bind(this)
