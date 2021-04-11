@@ -1,3 +1,4 @@
+import os
 from lib.Notifier import Notifier
 from lib.Fetcher import Fetcher
 
@@ -5,10 +6,9 @@ def main(event, context):
     # print("event:", event)
     # print("context:", context)
     source = 'tdem'
-    env = 'stage'
-    if env != 'dev':
+    if os.environ.get('DEPLOY_STAGE') == 'prod':
         Fetcher(source)
-    notifier = Notifier(source, env)
+    notifier = Notifier(source)
     update_count = notifier.process_push_notifications()
     return f'pushed to {update_count} subscribers'
 

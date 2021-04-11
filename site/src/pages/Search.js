@@ -23,7 +23,7 @@ function Search() {
         'vax_stats': {}, 
     });
 
-    const apiBase = 'https://p6ccqa7dik.execute-api.us-east-1.amazonaws.com/dev'
+    const apiBase = 'https://b1n1kqglok.execute-api.us-east-1.amazonaws.com/prod'
     const searchEndpoint = `${apiBase}/search`
 
     useEffect(() => {

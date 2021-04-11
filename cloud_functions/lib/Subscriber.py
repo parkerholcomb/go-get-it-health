@@ -2,22 +2,24 @@ import boto3
 import json
 import time
 from .GeoZipCache import GeoZipCache
+import os
 
 class Subscriber:
 
     default_radius = 50
 
-    def __init__(self, env = 'stage'):
-        self.env = env
+    def __init__(self):
+        self.env = os.environ.get('DEPLOY_STAGE')
+        self.bucket_name = 'ggi-subscriptions'
 
     def _get_radius(self, key):
-        if self.env in ['dev', 'stage']:
-            return 200
+        if self.env in ['dev', 'staging']:
+            return 100
         else: 
             return int(key.split("+")[-1])
 
     def load_subscribers(self):
-        s3_bucket = boto3.resource('s3').Bucket('vtx-subscriptions')
+        s3_bucket = boto3.resource('s3').Bucket(self.bucket_name)
         raw_keys = [obj.key for obj in s3_bucket.objects.all() if obj.key.startswith(f"{self.env}/+")]
         subscriptions = []
         geo_zip_cache = GeoZipCache()
@@ -48,7 +50,7 @@ class Subscriber:
             created = int(time.time()),
             meta = msgContent
         )
-        s3_bucket = boto3.resource('s3').Bucket('vtx-subscriptions')
+        s3_bucket = boto3.resource('s3').Bucket(self.bucket_name)
         subscription_key = f"{self.env}/{phone}#{zip_}+{radius}"
         s3_bucket.Object(key=subscription_key).put(Body=json.dumps(data))
         print("subscription added:", subscription_key)

@@ -1,11 +1,15 @@
-service: vaccinate-texas
+service: go-get-it
 frameworkVersion: '2'
 
 provider:
   name: aws
   runtime: python3.7
-  profile: default
+  profile: go-get-it
   lambdaHashingVersion: 20201221
+  environment: 
+    DEPLOY_STAGE: ${opt:stage,'dev'}
+  apiGateway:
+      shouldStartNameWithService: true
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -15,31 +19,24 @@ provider:
       Action:
         - secretsmanager:*
       Resource: '*'
-    
+
 functions:
   notifier_tdem: 
-    handler: notifier_tdem.main
+    handler: notifier_tdem_handler.main
     timeout: 600 
     layers:
-      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
+      - arn:aws:lambda:us-east-1:192178897053:layer:ggi-python-layer:1
     events: 
       - schedule: 
           rate: rate(10 minutes)
-  # notifier_heb: 
-  #   handler: notifier_heb.main
-  #   layers:
-  #     - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
-  #   events: 
-  #     - schedule: 
-  #         rate: rate(10 minutes)
-  sms_inbound_handler: 
+  sms_inbound: 
     handler: sms_inbound_handler.main
     events:
       - http:
           path: /sms/inbound
           method: post
     layers:
-      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
+      - arn:aws:lambda:us-east-1:192178897053:layer:ggi-python-layer:1
   sms_send_prompt: 
     handler: sms_prompt_handler.main
     events:
@@ -48,7 +45,7 @@ functions:
           method: post
           cors: true
     layers:
-      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
+      - arn:aws:lambda:us-east-1:192178897053:layer:ggi-python-layer:1
   search_by_zip: 
     handler: search_handler.main
     events:
@@ -57,4 +54,9 @@ functions:
           method: post
           cors: true
     layers:
-      - arn:aws:lambda:us-east-1:359698300326:layer:vtx-sls-layer:1
+      - arn:aws:lambda:us-east-1:192178897053:layer:ggi-python-layer:1
+
+
+# https://b5jii3v5qi.execute-api.us-east-1.amazonaws.com/dev
+# https://7ozzeseyz4.execute-api.us-east-1.amazonaws.com/staging
+# https://b1n1kqglok.execute-api.us-east-1.amazonaws.com/prod
