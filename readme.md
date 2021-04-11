@@ -14,7 +14,12 @@ Y'all - the time is now to lean in, advocate for your health and the health of y
 
 # About this project
 
-This project contains two serverless projects
+This project contains three main projects:
+- `'analytics\` series of work-in-progress `.ipynb` notebooks (#todo: take these out of .gitingore)
+- `'cloud_functions\` collection of lambda functions and pythons classes
+- `'site\` simple react app 
+
+![](https://ggi-public.s3.amazonaws.com/gogetit-mindnode.png)
 
 ## cloud_functions
 Python Lambda functions deployed with Serverless Framework 2
