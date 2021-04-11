@@ -156,6 +156,7 @@ td, th {
   height: auto;
   margin-top: 40px;
   text-align: center;
+  line-height: 1.2rem;
   opacity: 0;
   animation-fill-mode: forwards;
   animation-delay: 500ms;
