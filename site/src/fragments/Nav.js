@@ -26,9 +26,9 @@ export default function Menu() {
                         <Nav.Link href="https://tdem.maps.arcgis.com/apps/webappviewer/index.html?id=3700a84845c5470cb0dc3ddace5c376b" target="_blank">MAP</Nav.Link>
                         <Nav.Link href='/about'>ABOUT</Nav.Link>
                         {/* <Nav.Link href='/q'>SEARCH</Nav.Link> */}
-                        <a href='https://twitter.com/vaccinatetexas' target='_blank'>
+                        {/* <a href='https://twitter.com/vaccinatetexas' target='_blank'>
                                 <img src={twitterIcon} className='menuIcon' />
-                            </a>
+                            </a> */}
                         <a href='https://github.com/parquar/go-get-it-health' target='_blank'>
                             <img src={githubIcon} className='menuIcon' />
                         </a>

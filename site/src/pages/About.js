@@ -36,14 +36,17 @@ class About extends Component {
             
                 </div>
                 <div className="tagline">
-                    
                     <span>Made with love by 
                         <a href="https://www.linkedin.com/in/parkerholcomb/" target="_blank"> Parker</a>, 
                         <a href="https://www.linkedin.com/in/dwamian/" target="_blank"> Dwamian</a>, and 
                         <a href="https://www.linkedin.com/in/scott-woolley-wynd-0299072a/" target="_blank"> Scott</a>. 
                     </span>
                 </div>
-                {/* <PromptForm /> */}
+                
+                <div style={{marginTop:"25px"}}>
+                    <PromptForm />    
+                </div>
+                
             </div>
         )
     }

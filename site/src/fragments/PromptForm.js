@@ -8,7 +8,7 @@ export default class PromptForm extends Component {
         super(props);
         this.state = {};
         this.state.phone = '';
-        this.state.notification = '';
+        this.state.notification = 'Updates when vaccines become avaiable in your area.';
 
         this.handleFormInput = this.handleFormInput.bind(this)
         this.handleFormSubmit = this.handleFormSubmit.bind(this)
@@ -56,33 +56,30 @@ export default class PromptForm extends Component {
     render() {
         return (
             <div className='formContainer'>
-                <div className='notification-container'>
-                    {this.state.notification}
-                </div>
+
                 <Form inline className="subscribe-form" onSubmit={this.handleFormSubmit}>
-                    <div style={{ flexDirection: "row" }}>
-                        <div style={{ border: "1px solid #ced4da", borderRight: "", borderRadius: ".25rem 0 0 .25rem", width: "60px", alignContent: 'center' }}>
-                            <img
-                                style={{ padding: "15px 10px 10px 10px", height: "50px", filter: "opacity(50%)" }}
-                                src="https://vtx-public.s3.amazonaws.com/comment-alt.svg"
+                    <div style={{ flexDirection: "column" }}>
+                        <div className='notification-container'>
+                            {this.state.notification}
+                        </div>
+                        <div style={{ flexDirection: "row" }}>
+                            <input
+                                className="form-control"
+                                style={{ borderRadius: '.25rem 0 0 .25rem', maxWidth: "300px", height: "auto" }}
+                                value={this.state.phone}
+                                type="tel"
+                                placeholder="(512) 555-5555"
+                                onChange={(e) => { this.handleFormInput('phone', e.target.value) }}
                             />
+
+                            <button
+                                className="btn"
+                                style={{ backgroundColor: '#203375', color: 'white', borderRadius: '0 .25rem .25rem 0', borderLeft: "" }}
+                            >
+                                REGISTER
+                        </button>
                         </div>
 
-                        <input
-                            className="form-control"
-                            style={{ borderRadius: '0', maxWidth: "240px", height: "auto" }}
-                            value={this.state.phone}
-                            type="tel"
-                            placeholder="(512) 555-5555"
-                            onChange={(e) => { this.handleFormInput('phone', e.target.value) }}
-                        />
-
-                        <button
-                            className="btn"
-                            style={{ backgroundColor: '#203375', color: 'white', borderRadius: '0 .25rem .25rem 0', borderLeft: "" }}
-                        >
-                            REGISTER
-                  </button>
 
                     </div>
 
