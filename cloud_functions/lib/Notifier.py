@@ -37,7 +37,7 @@ class Notifier:
         for idx in df.index:
             body.append(f"💉 {df.loc[idx]['name']} has {df.loc[idx]['vaccines_delta']} new vaccines available, {df.loc[idx]['miles_away']} miles away")
         zip_ =  df['zip_'][0] # passing the zip of the first record to center the map on that location
-        body.append(f"\nVisit https://gogetit.health/q?zip={zip_} for more information #goandgetgetit")
+        body.append(f"\nVisit https://gogetit.health/q?zip={zip_} for more information #gogetit")
         if self.env != 'prod':
             body.append(f"Source: {self.source}")
         return '\n'.join(body)
